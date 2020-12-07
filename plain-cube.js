@@ -1,4 +1,4 @@
-let testArr = [
+let cube = [
   ["R", "R", "W"],
   ["G", "C", "W"],
   ["G", "B", "B"],
@@ -14,14 +14,14 @@ const MOVE_TYPE = {
   B: { fixer: "row", fixIndex: 2, moveCount: 1 },
   "B'": { fixer: "row", fixIndex: 2, moveCount: 2 },
 };
-//TODO : 줄바꿔서 출력하기
-// CUBE> 작성하기
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
+printArr(cube);
+rl.setPrompt("CUBE> ");
+rl.prompt();
 rl.on("line", function (line) {
   const charList = splitString(line);
   charList.forEach((char) => {
@@ -30,8 +30,10 @@ rl.on("line", function (line) {
       rl.close();
     }
     console.log(char);
-    moveCube(testArr, char);
+    const newCube = moveCube(cube, char);
+    printArr(newCube);
   });
+  rl.prompt();
 }).on("close", function () {
   process.exit();
 });
@@ -67,11 +69,13 @@ function moveCube(cube, type) {
       cube[type.fixIndex][2],
     ] = newArr;
   }
-  console.log(cube);
+  return cube;
 }
 
-function init() {
-  console.log(testArr);
+function printArr(arr) {
+  arr.forEach((line) => {
+    const str = line.join(" ");
+    console.log(str);
+  });
+  console.log();
 }
-
-init();
