@@ -1,9 +1,3 @@
-let cube = [
-  ["R", "R", "W"],
-  ["G", "C", "W"],
-  ["G", "B", "B"],
-];
-
 const MOVE_TYPE = {
   U: { fixer: "row", fixIndex: 0, moveCount: 2 },
   "U'": { fixer: "row", fixIndex: 0, moveCount: 1 },
@@ -52,6 +46,12 @@ function printArr(arr) {
   });
   console.log();
 }
+
+let cube = [
+  ["R", "R", "W"],
+  ["G", "C", "W"],
+  ["G", "B", "B"],
+];
 
 const readline = require("readline");
 const rl = readline.createInterface({
