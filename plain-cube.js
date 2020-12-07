@@ -14,32 +14,9 @@ const MOVE_TYPE = {
   B: { fixer: "row", fixIndex: 2, moveCount: 1 },
   "B'": { fixer: "row", fixIndex: 2, moveCount: 2 },
 };
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-printArr(cube);
-rl.setPrompt("CUBE> ");
-rl.prompt();
-rl.on("line", function (line) {
-  const typeList = splitString(line);
-  typeList.forEach((type) => {
-    if (type === "Q") {
-      console.log("Bye~");
-      rl.close();
-    }
-    console.log(type);
-    const newCube = moveCube(cube, type);
-    printArr(newCube);
-  });
-  rl.prompt();
-}).on("close", function () {
-  process.exit();
-});
 
 function splitString(str) {
-  let strList = str.split("");
+  let strList = str.split("").map((v) => v.toUpperCase());
   for (let i = 0; i < strList.length; i++) {
     if (strList[i] === "'") strList[i - 1] += "'";
   }
@@ -75,3 +52,27 @@ function printArr(arr) {
   });
   console.log();
 }
+
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+printArr(cube);
+rl.setPrompt("CUBE> ");
+rl.prompt();
+rl.on("line", function (line) {
+  const typeList = splitString(line);
+  typeList.forEach((type) => {
+    if (type === "Q") {
+      console.log("Bye~");
+      rl.close();
+    }
+    console.log(type);
+    const newCube = moveCube(cube, type);
+    printArr(newCube);
+  });
+  rl.prompt();
+}).on("close", function () {
+  process.exit();
+});
