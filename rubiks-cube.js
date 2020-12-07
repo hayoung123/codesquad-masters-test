@@ -1,3 +1,15 @@
+const cube = {
+  up: {
+    data: Array.from(Array(3), () => new Array(3).fill('B')),
+    linked: [this.front, cube.right, cube.back, cube.left]
+  },
+  down: { data: Array.from(Array(3), () => new Array(3).fill('R')) },
+  front: { data: Array.from(Array(3), () => new Array(3).fill('O')) },
+  right: { data: Array.from(Array(3), () => new Array(3).fill('G')) },
+  left: { data: Array.from(Array(3), () => new Array(3).fill('W')) },
+  back: { data: Array.from(Array(3), () => new Array(3).fill('Y')) }
+};
+
 function splitString(str) {
   let strList = str.split('').map((v) => v.toUpperCase());
   for (let i = 0; i < strList.length; i++) {
@@ -13,6 +25,7 @@ function splitString(str) {
       newStrList.push(v);
     }
   });
-  console.log(newStrList);
-  return strList;
+  return newStrList;
 }
+
+console.dir(cube, { depth: null });
