@@ -1,14 +1,21 @@
-/*
-> U  가장 윗줄을 왼쪽으로 한 칸 밀기 RRW -> RWR
-> U' 가장 윗줄을 오른쪽으로 한 칸 밀기 RRW -> WRR
-> R  가장 오른쪽 줄을 위로 한 칸 밀기 WWB -> WBW
-> R' 가장 오른쪽 줄을 아래로 한 칸 밀기 WWB -> BWW
-> L  가장 왼쪽 줄을 아래로 한 칸 밀기 RGG -> GRG (L의 경우 R과 방향이 반대임을 주의한다.)
-> L' 가장 왼쪽 줄을 위로 한 칸 밀기 RGG -> GGR
-> B  가장 아랫줄을 오른쪽으로 한 칸 밀기 GBB -> BGB (B의 경우도 U와 방향이 반대임을 주의한다.)
-> B' 가장 아랫줄을 왼쪽으로 한 칸 밀기 GBB -> BBG
-> Q  Bye~를 출력하고 프로그램을 종료한다.
-*/
+let testArr = [
+  ["R", "R", "W"],
+  ["G", "C", "W"],
+  ["G", "B", "B"],
+];
+
+const MOVE_TYPE = {
+  U: { fixer: "row", fixIndex: 0, moveCount: 2 },
+  "U'": { fixer: "row", fixIndex: 0, moveCount: 1 },
+  R: { fixer: "column", fixIndex: 2, moveCount: 2 },
+  "R'": { fixer: "column", fixIndex: 2, moveCount: 1 },
+  L: { fixer: "column", fixIndex: 0, moveCount: 1 },
+  "L'": { fixer: "column", fixIndex: 0, moveCount: 2 },
+  B: { fixer: "row", fixIndex: 2, moveCount: 1 },
+  "B'": { fixer: "row", fixIndex: 2, moveCount: 2 },
+};
+//TODO : 줄바꿔서 출력하기
+// CUBE> 작성하기
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
@@ -17,8 +24,14 @@ const rl = readline.createInterface({
 
 rl.on("line", function (line) {
   const charList = splitString(line);
-  //위에 배열 forEach로 아니면 for문으로 array 변경해 출력하는 함수
-  // 위 반복문 안에서 Q 나오면 rl.close();
+  charList.forEach((char) => {
+    if (char === "Q") {
+      console.log("Bye~");
+      rl.close();
+    }
+    console.log(char);
+    moveCube(testArr, char);
+  });
 }).on("close", function () {
   process.exit();
 });
@@ -32,9 +45,33 @@ function splitString(str) {
   return strList;
 }
 
-splitString("UU'RR'");
-let testArr = [
-  ["R", "R", "W"],
-  ["G", "C", "W"],
-  ["G", "B", "B"],
-];
+function moveCube(cube, type) {
+  type = MOVE_TYPE[type];
+  let newArr = new Array(3);
+  if (type.fixer === "column") {
+    for (let i = 0; i < cube.length; i++) {
+      newArr[(i + type.moveCount) % cube.length] = cube[i][type.fixIndex];
+    }
+    [
+      cube[0][type.fixIndex],
+      cube[1][type.fixIndex],
+      cube[2][type.fixIndex],
+    ] = newArr;
+  } else {
+    for (let i = 0; i < cube.length; i++) {
+      newArr[(i + type.moveCount) % cube.length] = cube[type.fixIndex][i];
+    }
+    [
+      cube[type.fixIndex][0],
+      cube[type.fixIndex][1],
+      cube[type.fixIndex][2],
+    ] = newArr;
+  }
+  console.log(cube);
+}
+
+function init() {
+  console.log(testArr);
+}
+
+init();
