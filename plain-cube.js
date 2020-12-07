@@ -23,14 +23,14 @@ printArr(cube);
 rl.setPrompt("CUBE> ");
 rl.prompt();
 rl.on("line", function (line) {
-  const charList = splitString(line);
-  charList.forEach((char) => {
-    if (char === "Q") {
+  const typeList = splitString(line);
+  typeList.forEach((type) => {
+    if (type === "Q") {
       console.log("Bye~");
       rl.close();
     }
-    console.log(char);
-    const newCube = moveCube(cube, char);
+    console.log(type);
+    const newCube = moveCube(cube, type);
     printArr(newCube);
   });
   rl.prompt();
@@ -49,25 +49,21 @@ function splitString(str) {
 
 function moveCube(cube, type) {
   type = MOVE_TYPE[type];
-  let newArr = new Array(3);
+  let newArr = new Array(cube.length);
   if (type.fixer === "column") {
     for (let i = 0; i < cube.length; i++) {
       newArr[(i + type.moveCount) % cube.length] = cube[i][type.fixIndex];
     }
-    [
-      cube[0][type.fixIndex],
-      cube[1][type.fixIndex],
-      cube[2][type.fixIndex],
-    ] = newArr;
+    for (let i = 0; i < cube.length; i++) {
+      cube[i][type.fixIndex] = newArr[i];
+    }
   } else {
     for (let i = 0; i < cube.length; i++) {
       newArr[(i + type.moveCount) % cube.length] = cube[type.fixIndex][i];
     }
-    [
-      cube[type.fixIndex][0],
-      cube[type.fixIndex][1],
-      cube[type.fixIndex][2],
-    ] = newArr;
+    for (let i = 0; i < cube.length; i++) {
+      cube[type.fixIndex][i] = newArr[i];
+    }
   }
   return cube;
 }
