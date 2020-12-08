@@ -82,11 +82,8 @@ class RubiksCube {
     return arr;
   }
   moveIndex(arr, reverse) {
-    if (reverse) {
-      return this.reverseOneIndex(arr);
-    } else {
-      return this.moveOneIndex(arr);
-    }
+    if (reverse) return this.reverseOneIndex(arr);
+    else return this.moveOneIndex(arr);
   }
   checkReverse(char) {
     if (char.split("").includes("'")) return true;
@@ -204,7 +201,38 @@ class Timer {
   }
 }
 
+class CubeGame {
+  constructor({ rubiksCube }) {
+    this.cube = rubiksCube.cube;
+    this.moveType = rubiksCube.moveType;
+    this.answer = JSON.stringify(this.cube);
+  }
+  getRandomString() {
+    let randomString = "";
+    Object.keys(this.moveType).forEach((type) => {
+      randomString += type;
+      randomString += Math.ceil(Math.random() * 4);
+    });
+    return randomString;
+  }
+  randomCube() {
+    const randomString = this.getRandomString();
+    const typeList = rubiksCube.splitString(randomString);
+    console.log(typeList);
+    typeList.forEach((type) => rubiksCube.moveCube(type));
+    console.log(this.cube);
+  }
+  checkAnswer() {
+    const stringCube = JSON.stringify(this.cube);
+    if (stringCube === this.answer) {
+      console.log("정답입니다!");
+    }
+  }
+}
+
 const rubiksCube = new RubiksCube({ cube, DIR_TYPE, MOVE_TYPE });
+const cubeGame = new CubeGame({ rubiksCube });
+// cubeGame.randomCube();
 const timer = new Timer();
 const readline = require("readline");
 const rl = readline.createInterface({
@@ -217,7 +245,7 @@ rl.prompt();
 rl.on("line", function (line) {
   const typeList = rubiksCube.splitString(line);
   typeList.forEach((type) => {
-    if (type === "Q") {
+    if (type === "Q" || cubeGame.checkAnswer()) {
       timer.checkTime();
       rubiksCube.printEndComment();
       rl.close();
