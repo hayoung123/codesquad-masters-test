@@ -9,6 +9,20 @@ const MOVE_TYPE = {
   "B'": { fixer: "row", fixIndex: 2, moveCount: 2 },
 };
 
+function moveOneIndex(arr) {
+  const last = arr.pop();
+  arr.unshift(last);
+  return arr;
+}
+
+function moveList(arr, count) {
+  let list = arr;
+  for (let i = 0; i < count; i++) {
+    list = moveOneIndex(list);
+  }
+  return list;
+}
+
 function splitString(str) {
   let strList = str.split("").map((v) => v.toUpperCase());
   for (let i = 0; i < strList.length; i++) {
@@ -20,18 +34,20 @@ function splitString(str) {
 
 function moveCube(cube, type) {
   type = MOVE_TYPE[type];
-  let newArr = new Array(cube.length);
+  let newArr = [];
   if (type.fixer === "column") {
     for (let i = 0; i < cube.length; i++) {
-      newArr[(i + type.moveCount) % cube.length] = cube[i][type.fixIndex];
+      newArr.push(cube[i][type.fixIndex]);
     }
+    newArr = moveList(newArr, type.moveCount);
     for (let i = 0; i < cube.length; i++) {
       cube[i][type.fixIndex] = newArr[i];
     }
   } else {
     for (let i = 0; i < cube.length; i++) {
-      newArr[(i + type.moveCount) % cube.length] = cube[type.fixIndex][i];
+      newArr.push(cube[type.fixIndex][i]);
     }
+    newArr = moveList(newArr, type.moveCount);
     for (let i = 0; i < cube.length; i++) {
       cube[type.fixIndex][i] = newArr[i];
     }
