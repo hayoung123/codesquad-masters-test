@@ -21,13 +21,19 @@ function moveChar(str, count, dir) {
   if (dir === "L") count = strLen - (count % strLen);
   else count = (count * 1) % strLen;
   let strList = str.split("");
-  for (let i = 0; i < count; i++) {
-    strList = moveOneIndex(strList);
-  }
+  moveList(strList, count);
   console.log(strList.join(""));
 }
 function moveOneIndex(arr) {
   const last = arr.pop();
   arr.unshift(last);
   return arr;
+}
+
+function moveList(arr, count) {
+  let list = arr;
+  for (let i = 0; i < count; i++) {
+    list = moveOneIndex(list);
+  }
+  return list;
 }
