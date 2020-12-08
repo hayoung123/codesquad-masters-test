@@ -47,6 +47,12 @@ let MOVE_TYPE = {
   },
 };
 
+function moveOneIndex(arr) {
+  const last = arr.pop();
+  arr.unshift(last);
+  return arr;
+}
+
 function splitString(str) {
   let strList = str.split("").map((v) => v.toUpperCase());
   for (let i = 0; i < strList.length; i++) {
@@ -65,12 +71,16 @@ function splitString(str) {
   return newStrList;
 }
 
-function moveCube(cube, type) {
+function moveCube(type) {
   type = MOVE_TYPE[type];
   let newArr = [];
-  for (let i = 0; i < type.linked; i++) {
-    const linkedArr = makeNewArr(type.linked[i]);
+  for (let i = 0; i < type.linked.length; i++) {
+    const linkedArr = makeNewArr(type.linked[i], type.linkedDir[i]);
     newArr.push(linkedArr);
+  }
+  newArr = moveOneIndex(newArr);
+  for (let i = 0; i < type.linked.length; i++) {
+    setCubeData(type.linked[i], newArr[i], type.linkedDir[i]);
   }
 }
 
@@ -87,3 +97,18 @@ function makeNewArr(cube, dir) {
   }
   return newArr;
 }
+
+function setCubeData(cube, newCube, dir) {
+  if (dir.fixer === "column") {
+    for (let i = 0; i < cube.length; i++) {
+      cube[dir.fixIndex][i] = newCube[i];
+    }
+  } else {
+    for (let i = 0; i < cube.length; i++) {
+      cube[i][dir.fixIndex] = newCube[i];
+    }
+  }
+}
+
+moveCube("U");
+console.dir(cube, { depth: null });
