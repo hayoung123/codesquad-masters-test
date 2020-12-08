@@ -1,12 +1,12 @@
 const MOVE_TYPE = {
-  U: { fixer: "row", fixIndex: 0, moveCount: 2 },
-  "U'": { fixer: "row", fixIndex: 0, moveCount: 1 },
-  R: { fixer: "column", fixIndex: 2, moveCount: 2 },
-  "R'": { fixer: "column", fixIndex: 2, moveCount: 1 },
-  L: { fixer: "column", fixIndex: 0, moveCount: 1 },
-  "L'": { fixer: "column", fixIndex: 0, moveCount: 2 },
-  B: { fixer: "row", fixIndex: 2, moveCount: 1 },
-  "B'": { fixer: "row", fixIndex: 2, moveCount: 2 },
+  U: { fixer: "row", fixIndex: 0, reverse: true },
+  "U'": { fixer: "row", fixIndex: 0, reverse: false },
+  R: { fixer: "column", fixIndex: 2, reverse: true },
+  "R'": { fixer: "column", fixIndex: 2, reverse: false },
+  L: { fixer: "column", fixIndex: 0, reverse: false },
+  "L'": { fixer: "column", fixIndex: 0, reverse: true },
+  B: { fixer: "row", fixIndex: 2, reverse: false },
+  "B'": { fixer: "row", fixIndex: 2, reverse: true },
 };
 
 function moveOneIndex(arr) {
@@ -14,13 +14,17 @@ function moveOneIndex(arr) {
   arr.unshift(last);
   return arr;
 }
-
-function moveList(arr, count) {
-  let list = arr;
-  for (let i = 0; i < count; i++) {
-    list = moveOneIndex(list);
+function reverseOneIndex(arr) {
+  const first = arr.shift();
+  arr.push(first);
+  return arr;
+}
+function moveIndex(arr, reverse) {
+  if (!reverse) {
+    return moveOneIndex(arr);
+  } else {
+    return reverseOneIndex(arr);
   }
-  return list;
 }
 
 function splitString(str) {
@@ -39,7 +43,7 @@ function moveCube(cube, type) {
     for (let i = 0; i < cube.length; i++) {
       newArr.push(cube[i][type.fixIndex]);
     }
-    newArr = moveList(newArr, type.moveCount);
+    newArr = moveIndex(newArr, type.reverse);
     for (let i = 0; i < cube.length; i++) {
       cube[i][type.fixIndex] = newArr[i];
     }
@@ -47,7 +51,7 @@ function moveCube(cube, type) {
     for (let i = 0; i < cube.length; i++) {
       newArr.push(cube[type.fixIndex][i]);
     }
-    newArr = moveList(newArr, type.moveCount);
+    newArr = moveIndex(newArr, type.reverse);
     for (let i = 0; i < cube.length; i++) {
       cube[type.fixIndex][i] = newArr[i];
     }
