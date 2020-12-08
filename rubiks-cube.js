@@ -89,10 +89,11 @@ function splitString(str) {
   return newStrList;
 }
 
-function moveCube(type) {
+function moveCube(cube, type) {
   const reverse = checkReverse(type);
   type = removeQuotes(type);
   type = MOVE_TYPE[type];
+  type.data = rotateCube(type.data, reverse);
   let newArr = [];
   for (let i = 0; i < type.linked.length; i++) {
     const linkedArr = makeNewArr(type.linked[i], type.linkedDir[i]);
@@ -102,6 +103,7 @@ function moveCube(type) {
   for (let i = 0; i < type.linked.length; i++) {
     setCubeData(type.linked[i], newArr[i], type.linkedDir[i]);
   }
+  return cube;
 }
 
 function makeNewArr(cube, dir) {
@@ -129,6 +131,61 @@ function setCubeData(cube, newCube, dir) {
     }
   }
 }
+function rotateCube(cube, reverse) {
+  let arr = cube;
+  if (reverse) {
+    arr = reverseRotate(arr);
+  } else {
+    arr = rotate(arr);
+  }
+  return arr;
+}
 
-moveCube("U'");
+function rotate(cube) {
+  let arr = cube;
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < i; j++) {
+      [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+    }
+  }
+  arr.forEach((row) => row.reverse());
+  return arr;
+}
+function reverseRotate(cube) {
+  let arr = cube;
+  arr.forEach((row) => row.reverse());
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < i; j++) {
+      [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+    }
+  }
+  return arr;
+}
+
+function printCube(cube) {
+  //up/ left,front,right,back / down
+}
+
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  prompt: "CUBE> ",
+});
 console.dir(cube, { depth: null });
+rl.prompt();
+rl.on("line", function (line) {
+  const typeList = splitString(line);
+  typeList.forEach((type) => {
+    if (type === "Q") {
+      console.log("Bye~");
+      rl.close();
+    }
+    console.log(type);
+    const newCube = moveCube(cube, type);
+    console.dir(newCube, { depth: null });
+  });
+  rl.prompt();
+}).on("close", function () {
+  process.exit();
+});
