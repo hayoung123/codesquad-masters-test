@@ -57,9 +57,9 @@ const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  prompt: "CUBE> ",
 });
 printArr(cube);
-rl.setPrompt("CUBE> ");
 rl.prompt();
 rl.on("line", function (line) {
   const typeList = splitString(line);
