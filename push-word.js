@@ -1,3 +1,41 @@
+function moveChar(str, count, dir) {
+  const strLen = str.length;
+  if (count < 0) {
+    dir = dir === "R" ? "L" : "R";
+    count *= -1;
+  }
+  count = (count * 1) % strLen;
+
+  let strList = str.split("");
+  if (dir === "R") moveList(strList, count);
+  else moveReverseList(strList, count);
+  console.log(strList.join(""));
+}
+function moveOneIndex(arr) {
+  const last = arr.pop();
+  arr.unshift(last);
+  return arr;
+}
+function moveList(arr, count) {
+  let list = arr;
+  for (let i = 0; i < count; i++) {
+    list = moveOneIndex(list);
+  }
+  return list;
+}
+function reveseOneIndex(arr) {
+  const first = arr.shift();
+  arr.push(first);
+  return arr;
+}
+function moveReverseList(arr, count) {
+  let list = arr;
+  for (let i = 0; i < count; i++) {
+    list = reveseOneIndex(list);
+  }
+  return list;
+}
+
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
@@ -11,29 +49,3 @@ rl.on("line", function (line) {
 }).on("close", function () {
   process.exit();
 });
-
-function moveChar(str, count, dir) {
-  const strLen = str.length;
-  if (count < 0) {
-    dir = dir === "R" ? "L" : "R";
-    count *= -1;
-  }
-  if (dir === "L") count = strLen - (count % strLen);
-  else count = (count * 1) % strLen;
-  let strList = str.split("");
-  moveList(strList, count);
-  console.log(strList.join(""));
-}
-function moveOneIndex(arr) {
-  const last = arr.pop();
-  arr.unshift(last);
-  return arr;
-}
-
-function moveList(arr, count) {
-  let list = arr;
-  for (let i = 0; i < count; i++) {
-    list = moveOneIndex(list);
-  }
-  return list;
-}
