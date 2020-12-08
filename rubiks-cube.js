@@ -48,10 +48,10 @@ let MOVE_TYPE = {
 };
 
 class RubiksCube {
-  constructor(cube, dirType, moveType) {
+  constructor({ cube, DIR_TYPE, MOVE_TYPE }) {
     this.cube = cube;
-    this.dirType = dirType;
-    this.moveType = moveType;
+    this.dirType = DIR_TYPE;
+    this.moveType = MOVE_TYPE;
     this.count = 0;
   }
   splitString(str) {
@@ -184,9 +184,28 @@ class RubiksCube {
     console.log("이용해주셔서 감사합니다. 뚜룻뚜룻뚜~");
   }
 }
+class Timer {
+  constructor() {
+    this.start = new Date();
+    this.timer = 0;
+  }
+  checkTime() {
+    this.timer = new Date() - this.start;
+    let seconds = Math.floor(this.timer / 1000);
+    seconds = this.addZero(seconds);
+    let minutes = Math.floor(seconds / 60);
+    minutes = this.addZero(minutes);
+    console.log(`경과시간 : ${minutes}:${seconds}`);
+  }
+  addZero(num) {
+    if (num === 0) return "00";
+    else if (num < 10) return `0${num}`;
+    else return num;
+  }
+}
 
-const rubiksCube = new RubiksCube(cube, DIR_TYPE, MOVE_TYPE);
-
+const rubiksCube = new RubiksCube({ cube, DIR_TYPE, MOVE_TYPE });
+const timer = new Timer();
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
@@ -199,6 +218,7 @@ rl.on("line", function (line) {
   const typeList = rubiksCube.splitString(line);
   typeList.forEach((type) => {
     if (type === "Q") {
+      timer.checkTime();
       rubiksCube.printEndComment();
       rl.close();
     }
