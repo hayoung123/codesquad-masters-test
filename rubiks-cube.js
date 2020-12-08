@@ -23,7 +23,7 @@ let MOVE_TYPE = {
   R: {
     data: cube.right,
     linked: [cube.up, cube.back, cube.down, cube.front],
-    linkedDir: [DIR_TYPE.RIGHT, DIR_TYPE.LEFT, DIR_TYPE.DOWN, DIR_TYPE.DOWN],
+    linkedDir: [DIR_TYPE.RIGHT, DIR_TYPE.LEFT, DIR_TYPE.RIGHT, DIR_TYPE.RIGHT],
   },
   L: {
     data: cube.left,
