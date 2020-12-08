@@ -19,10 +19,15 @@ function moveChar(str, count, dir) {
     count *= -1;
   }
   if (dir === "L") count = strLen - (count % strLen);
-  else count *= 1;
-  const arr = new Array(strLen);
-  str.split("").forEach((char, idx) => {
-    arr[(idx + count) % strLen] = char;
-  });
-  console.log(arr.join(""));
+  else count = (count * 1) % strLen;
+  let strList = str.split("");
+  for (let i = 0; i < count; i++) {
+    strList = moveOneIndex(strList);
+  }
+  console.log(strList.join(""));
+}
+function moveOneIndex(arr) {
+  const last = arr.pop();
+  arr.unshift(last);
+  return arr;
 }
