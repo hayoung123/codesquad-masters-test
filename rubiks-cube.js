@@ -108,7 +108,7 @@ function moveCube(cube, type) {
 
 function makeNewArr(cube, dir) {
   let newArr = [];
-  if (dir.fixer === "column") {
+  if (dir.fixer === "row") {
     for (let i = 0; i < cube.length; i++) {
       newArr.push(cube[dir.fixIndex][i]);
     }
@@ -121,7 +121,7 @@ function makeNewArr(cube, dir) {
 }
 
 function setCubeData(cube, newCube, dir) {
-  if (dir.fixer === "column") {
+  if (dir.fixer === "row") {
     for (let i = 0; i < cube.length; i++) {
       cube[dir.fixIndex][i] = newCube[i];
     }
@@ -162,8 +162,25 @@ function reverseRotate(cube) {
   return arr;
 }
 
+function printArr(arr) {
+  arr.forEach((line) => {
+    const str = line.join(" ");
+    console.log("\t", str);
+  });
+  console.log();
+}
+
 function printCube(cube) {
-  //up/ left,front,right,back / down
+  printArr(cube.up);
+  for (let i = 0; i < 3; i++) {
+    const strLeft = cube.left[i].join(" ");
+    const strFront = cube.front[i].join(" ");
+    const strRight = cube.right[i].join(" ");
+    const strBack = cube.back[i].join(" ");
+    console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
+  }
+  console.log();
+  printArr(cube.down);
 }
 
 const readline = require("readline");
@@ -172,7 +189,7 @@ const rl = readline.createInterface({
   output: process.stdout,
   prompt: "CUBE> ",
 });
-console.dir(cube, { depth: null });
+printCube(cube);
 rl.prompt();
 rl.on("line", function (line) {
   const typeList = splitString(line);
@@ -183,7 +200,7 @@ rl.on("line", function (line) {
     }
     console.log(type);
     const newCube = moveCube(cube, type);
-    console.dir(newCube, { depth: null });
+    printCube(newCube);
   });
   rl.prompt();
 }).on("close", function () {
