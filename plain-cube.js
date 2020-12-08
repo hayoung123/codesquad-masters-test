@@ -11,19 +11,6 @@ class PlainCube {
       B: { fixer: "row", fixIndex: 2, reverse: false },
       "B'": { fixer: "row", fixIndex: 2, reverse: true },
     };
-    this.strList;
-  }
-  init(str, rl) {
-    this.strList = this.splitString(str);
-    this.strList.forEach((type) => {
-      if (type === "Q") {
-        console.log("Bye~");
-        rl.close();
-      }
-      console.log(type);
-      this.moveCube(this.cube, type);
-      this.printArr();
-    });
   }
   moveOneIndex(arr) {
     const last = arr.pop();
@@ -73,7 +60,7 @@ class PlainCube {
       }
     }
   }
-  printArr() {
+  printCube() {
     this.cube.forEach((line) => {
       const str = line.join(" ");
       console.log(str);
@@ -96,10 +83,19 @@ const rl = readline.createInterface({
   output: process.stdout,
   prompt: "CUBE> ",
 });
-plainCube.printArr();
+plainCube.printCube();
 rl.prompt();
 rl.on("line", function (line) {
-  plainCube.init(line, rl);
+  const strList = plainCube.splitString(line);
+  strList.forEach((type) => {
+    if (type === "Q") {
+      console.log("Bye~");
+      rl.close();
+    }
+    console.log(type);
+    plainCube.moveCube(plainCube.cube, type);
+    plainCube.printCube();
+  });
   rl.prompt();
 }).on("close", function () {
   process.exit();
