@@ -49,7 +49,10 @@ let MOVE_TYPE = {
 
 class RubiksCube {
   constructor(cube, dirType, moveType) {
-    (this.cube = cube), (this.dirType = dirType), (this.moveType = moveType);
+    this.cube = cube;
+    this.dirType = dirType;
+    this.moveType = moveType;
+    this.count = 0;
   }
   splitString(str) {
     let strList = str.split("").map((v) => v.toUpperCase());
@@ -93,6 +96,7 @@ class RubiksCube {
     return char.replace("'", "");
   }
   moveCube(type) {
+    this.count++;
     const reverse = this.checkReverse(type);
     type = this.removeQuotes(type);
     type = this.moveType[type];
@@ -175,6 +179,10 @@ class RubiksCube {
     console.log();
     this.printCube(this.cube.down);
   }
+  printEndComment() {
+    console.log(`조작갯수: ${this.count}`);
+    console.log("이용해주셔서 감사합니다. 뚜룻뚜룻뚜~");
+  }
 }
 
 const rubiksCube = new RubiksCube(cube, DIR_TYPE, MOVE_TYPE);
@@ -191,7 +199,7 @@ rl.on("line", function (line) {
   const typeList = rubiksCube.splitString(line);
   typeList.forEach((type) => {
     if (type === "Q") {
-      console.log("Bye~");
+      rubiksCube.printEndComment();
       rl.close();
     }
     console.log(type);
