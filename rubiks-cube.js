@@ -47,137 +47,137 @@ let MOVE_TYPE = {
   },
 };
 
-function moveOneIndex(arr) {
-  const last = arr.pop();
-  arr.unshift(last);
-  return arr;
-}
-function reverseOneIndex(arr) {
-  const first = arr.shift();
-  arr.push(first);
-  return arr;
-}
-function moveIndex(arr, reverse) {
-  if (reverse) {
-    return reverseOneIndex(arr);
-  } else {
-    return moveOneIndex(arr);
+class RubiksCube {
+  constructor(cube, dirType, moveType) {
+    (this.cube = cube), (this.dirType = dirType), (this.moveType = moveType);
   }
-}
-function checkReverse(char) {
-  if (char.split("").includes("'")) return true;
-  return false;
-}
-function removeQuotes(char) {
-  return char.replace("'", "");
-}
-function splitString(str) {
-  let strList = str.split("").map((v) => v.toUpperCase());
-  for (let i = 0; i < strList.length; i++) {
-    if (strList[i] === "'") strList[i - 1] += "'";
+  splitString(str) {
+    let strList = str.split("").map((v) => v.toUpperCase());
+    for (let i = 0; i < strList.length; i++) {
+      if (strList[i] === "'") strList[i - 1] += "'";
+    }
+    strList = strList.filter((char) => char !== "'");
+    const newStrList = [];
+    strList.forEach((v, idx) => {
+      if (!isNaN(parseInt(v))) {
+        const arr = new Array(v * 1 - 1).fill(strList[idx - 1]);
+        newStrList.push(...arr);
+      } else {
+        newStrList.push(v);
+      }
+    });
+    return newStrList;
   }
-  strList = strList.filter((char) => char !== "'");
-  const newStrList = [];
-  strList.forEach((v, idx) => {
-    if (!isNaN(parseInt(v))) {
-      const arr = new Array(v * 1 - 1).fill(strList[idx - 1]);
-      newStrList.push(...arr);
+  moveOneIndex(arr) {
+    const last = arr.pop();
+    arr.unshift(last);
+    return arr;
+  }
+  reverseOneIndex(arr) {
+    const first = arr.shift();
+    arr.push(first);
+    return arr;
+  }
+  moveIndex(arr, reverse) {
+    if (reverse) {
+      return this.reverseOneIndex(arr);
     } else {
-      newStrList.push(v);
-    }
-  });
-  return newStrList;
-}
-
-function moveCube(cube, type) {
-  const reverse = checkReverse(type);
-  type = removeQuotes(type);
-  type = MOVE_TYPE[type];
-  type.data = rotateCube(type.data, reverse);
-  let newArr = [];
-  type.linked.forEach((cube, idx) => {
-    const linkedArr = makeNewArr(cube, type.linkedDir[idx]);
-    newArr.push(linkedArr);
-  });
-  newArr = moveIndex(newArr, reverse);
-  type.linked.forEach((cube, idx) =>
-    setCubeData(cube, newArr[idx], type.linkedDir[idx])
-  );
-  return cube;
-}
-
-function makeNewArr(cube, dir) {
-  let newArr = [];
-  if (dir.fixer === "row") {
-    cube[dir.fixIndex].forEach((code) => newArr.push(code));
-  } else {
-    cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
-  }
-  return newArr;
-}
-
-function setCubeData(cube, newCube, dir) {
-  if (dir.fixer === "row") {
-    for (let i = 0; i < cube.length; i++) {
-      cube[dir.fixIndex][i] = newCube[i];
-    }
-  } else {
-    for (let i = 0; i < cube.length; i++) {
-      cube[i][dir.fixIndex] = newCube[i];
+      return this.moveOneIndex(arr);
     }
   }
-}
-function rotateCube(cube, reverse) {
-  let arr = cube;
-  if (reverse) {
-    arr = reverseRotate(arr);
-  } else {
-    arr = rotate(arr);
+  checkReverse(char) {
+    if (char.split("").includes("'")) return true;
+    return false;
   }
-  return arr;
-}
-
-function rotate(cube) {
-  let arr = cube;
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < i; j++) {
-      [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+  removeQuotes(char) {
+    return char.replace("'", "");
+  }
+  moveCube(type) {
+    const reverse = this.checkReverse(type);
+    type = this.removeQuotes(type);
+    type = this.moveType[type];
+    type.data = this.rotateCube(type.data, reverse);
+    let newArr = [];
+    type.linked.forEach((cube, idx) => {
+      const linkedArr = this.makeNewArr(cube, type.linkedDir[idx]);
+      newArr.push(linkedArr);
+    });
+    newArr = this.moveIndex(newArr, reverse);
+    type.linked.forEach((cube, idx) =>
+      this.setCubeData(cube, newArr[idx], type.linkedDir[idx])
+    );
+  }
+  makeNewArr(cube, dir) {
+    let newArr = [];
+    if (dir.fixer === "row") {
+      cube[dir.fixIndex].forEach((code) => newArr.push(code));
+    } else {
+      cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
+    }
+    return newArr;
+  }
+  setCubeData(cube, newCube, dir) {
+    if (dir.fixer === "row") {
+      for (let i = 0; i < cube.length; i++) {
+        cube[dir.fixIndex][i] = newCube[i];
+      }
+    } else {
+      for (let i = 0; i < cube.length; i++) {
+        cube[i][dir.fixIndex] = newCube[i];
+      }
     }
   }
-  arr.forEach((row) => row.reverse());
-  return arr;
-}
-function reverseRotate(cube) {
-  let arr = cube;
-  arr.forEach((row) => row.reverse());
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < i; j++) {
-      [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+  rotateCube(cube, reverse) {
+    let arr = cube;
+    if (reverse) {
+      arr = this.reverseRotate(arr);
+    } else {
+      arr = this.rotate(arr);
     }
+    return arr;
   }
-  return arr;
+  rotate(cube) {
+    let arr = cube;
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < i; j++) {
+        [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+      }
+    }
+    arr.forEach((row) => row.reverse());
+    return arr;
+  }
+  reverseRotate(cube) {
+    let arr = cube;
+    arr.forEach((row) => row.reverse());
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < i; j++) {
+        [arr[i][j], arr[j][i]] = [arr[j][i], arr[i][j]];
+      }
+    }
+    return arr;
+  }
+  printCube(cube) {
+    cube.forEach((line) => {
+      const str = line.join(" ");
+      console.log("\t", str);
+    });
+    console.log();
+  }
+  printView() {
+    this.printCube(this.cube.up);
+    for (let i = 0; i < 3; i++) {
+      const strLeft = this.cube.left[i].join(" ");
+      const strFront = this.cube.front[i].join(" ");
+      const strRight = this.cube.right[i].join(" ");
+      const strBack = this.cube.back[i].join(" ");
+      console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
+    }
+    console.log();
+    this.printCube(this.cube.down);
+  }
 }
 
-function printArr(arr) {
-  arr.forEach((line) => {
-    const str = line.join(" ");
-    console.log("\t", str);
-  });
-  console.log();
-}
-
-function printCube(cube) {
-  printArr(cube.up);
-  for (let i = 0; i < 3; i++) {
-    const strLeft = cube.left[i].join(" ");
-    const strFront = cube.front[i].join(" ");
-    const strRight = cube.right[i].join(" ");
-    const strBack = cube.back[i].join(" ");
-    console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
-  }
-  console.log();
-  printArr(cube.down);
-}
+const rubiksCube = new RubiksCube(cube, DIR_TYPE, MOVE_TYPE);
 
 const readline = require("readline");
 const rl = readline.createInterface({
@@ -185,18 +185,18 @@ const rl = readline.createInterface({
   output: process.stdout,
   prompt: "CUBE> ",
 });
-printCube(cube);
+rubiksCube.printView();
 rl.prompt();
 rl.on("line", function (line) {
-  const typeList = splitString(line);
+  const typeList = rubiksCube.splitString(line);
   typeList.forEach((type) => {
     if (type === "Q") {
       console.log("Bye~");
       rl.close();
     }
     console.log(type);
-    const newCube = moveCube(cube, type);
-    printCube(newCube);
+    rubiksCube.moveCube(type);
+    rubiksCube.printView();
   });
   rl.prompt();
 }).on("close", function () {
