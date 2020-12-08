@@ -58,10 +58,10 @@ function reverseOneIndex(arr) {
   return arr;
 }
 function moveIndex(arr, reverse) {
-  if (!reverse) {
-    return moveOneIndex(arr);
-  } else {
+  if (reverse) {
     return reverseOneIndex(arr);
+  } else {
+    return moveOneIndex(arr);
   }
 }
 function checkReverse(char) {
@@ -95,27 +95,23 @@ function moveCube(cube, type) {
   type = MOVE_TYPE[type];
   type.data = rotateCube(type.data, reverse);
   let newArr = [];
-  for (let i = 0; i < type.linked.length; i++) {
-    const linkedArr = makeNewArr(type.linked[i], type.linkedDir[i]);
+  type.linked.forEach((cube, idx) => {
+    const linkedArr = makeNewArr(cube, type.linkedDir[idx]);
     newArr.push(linkedArr);
-  }
+  });
   newArr = moveIndex(newArr, reverse);
-  for (let i = 0; i < type.linked.length; i++) {
-    setCubeData(type.linked[i], newArr[i], type.linkedDir[i]);
-  }
+  type.linked.forEach((cube, idx) =>
+    setCubeData(cube, newArr[idx], type.linkedDir[idx])
+  );
   return cube;
 }
 
 function makeNewArr(cube, dir) {
   let newArr = [];
   if (dir.fixer === "row") {
-    for (let i = 0; i < cube.length; i++) {
-      newArr.push(cube[dir.fixIndex][i]);
-    }
+    cube[dir.fixIndex].forEach((code) => newArr.push(code));
   } else {
-    for (let i = 0; i < cube.length; i++) {
-      newArr.push(cube[i][dir.fixIndex]);
-    }
+    cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
   }
   return newArr;
 }
