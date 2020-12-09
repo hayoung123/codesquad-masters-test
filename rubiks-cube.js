@@ -117,13 +117,8 @@ class RubiksCube {
     }
   }
   rotateCube(cube, reverse) {
-    let arr = cube;
-    if (reverse) {
-      arr = this.reverseRotate(arr);
-    } else {
-      arr = this.rotate(arr);
-    }
-    return arr;
+    if (reverse) return this.reverseRotate(cube);
+    else return this.rotate(cube);
   }
   rotate(cube) {
     let arr = cube;
