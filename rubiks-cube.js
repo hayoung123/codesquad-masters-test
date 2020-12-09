@@ -185,10 +185,28 @@ class Timer {
 }
 
 class CubeGame {
-  constructor({ rubiksCube }) {
+  constructor({ rubiksCube, timer }) {
+    this.rubiksCube = rubiksCube;
     this.cube = rubiksCube.cube;
-    this.moveType = rubiksCube.moveType;
+    this.timer = timer;
+    this.moveType = rubiksCube.MOVE_TYPE;
     this.answer = JSON.stringify(this.cube);
+  }
+  playCubeGame(input, rl) {
+    if (input === "mix") {
+      this.randomCube();
+      this.rubiksCube.printView();
+    } else {
+      const typeList = rubiksCube.splitString(input);
+      typeList.forEach((type) => {
+        if (type === "Q") this.gameOver(rl);
+        console.log(type);
+        this.rubiksCube.moveCube(type);
+        this.rubiksCube.printView();
+        if (this.checkAnswer()) this.gameOver(rl);
+      });
+    }
+    rl.prompt();
   }
   getRandomString() {
     let randomString = "";
@@ -200,16 +218,22 @@ class CubeGame {
   }
   randomCube() {
     const randomString = this.getRandomString();
+    const count = rubiksCube.count;
     const typeList = rubiksCube.splitString(randomString);
-    console.log(typeList);
     typeList.forEach((type) => rubiksCube.moveCube(type));
-    console.log(this.cube);
+    rubiksCube.count = count;
   }
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
     if (stringCube === this.answer) {
       console.log("정답입니다!");
+      return true;
     }
+  }
+  gameOver(rl) {
+    this.timer.checkTime();
+    this.rubiksCube.printEndComment();
+    rl.close();
   }
 }
 
@@ -223,31 +247,20 @@ let cube = {
 };
 
 const rubiksCube = new RubiksCube({ cube });
-const cubeGame = new CubeGame({ rubiksCube });
-// cubeGame.randomCube();
-
 const timer = new Timer();
+const cubeGame = new CubeGame({ rubiksCube, timer });
+
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   prompt: "CUBE> ",
 });
+console.log('섞고 싶으면 "mix"를 입력해주세요');
 rubiksCube.printView();
 rl.prompt();
 rl.on("line", function (line) {
-  const typeList = rubiksCube.splitString(line);
-  typeList.forEach((type) => {
-    if (type === "Q" || cubeGame.checkAnswer()) {
-      timer.checkTime();
-      rubiksCube.printEndComment();
-      rl.close();
-    }
-    console.log(type);
-    rubiksCube.moveCube(type);
-    rubiksCube.printView();
-  });
-  rl.prompt();
+  cubeGame.playCubeGame(line, rl);
 }).on("close", function () {
   process.exit();
 });
