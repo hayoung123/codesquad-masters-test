@@ -5,10 +5,10 @@ function moveChar(str, count, dir) {
     count *= -1;
   }
   count = (count * 1) % strLen;
+  if (dir === "L") count = strLen - count;
 
   let strList = str.split("");
-  if (dir === "R") moveList(strList, count);
-  else moveReverseList(strList, count);
+  strList = moveList(strList, count);
   console.log(strList.join(""));
 }
 function moveOneIndex(arr) {
@@ -20,18 +20,6 @@ function moveList(arr, count) {
   let list = arr;
   for (let i = 0; i < count; i++) {
     list = moveOneIndex(list);
-  }
-  return list;
-}
-function reverseOneIndex(arr) {
-  const first = arr.shift();
-  arr.push(first);
-  return arr;
-}
-function moveReverseList(arr, count) {
-  let list = arr;
-  for (let i = 0; i < count; i++) {
-    list = reverseOneIndex(list);
   }
   return list;
 }
