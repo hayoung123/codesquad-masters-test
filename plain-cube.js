@@ -23,11 +23,8 @@ class PlainCube {
     return arr;
   }
   moveIndex(arr, reverse) {
-    if (!reverse) {
-      return this.moveOneIndex(arr);
-    } else {
-      return this.reverseOneIndex(arr);
-    }
+    if (reverse) return this.reverseOneIndex(arr);
+    else return this.moveOneIndex(arr);
   }
   splitString(str) {
     let strList = str.split("").map((v) => v.toUpperCase());
@@ -86,8 +83,8 @@ const rl = readline.createInterface({
 plainCube.printCube();
 rl.prompt();
 rl.on("line", function (line) {
-  const strList = plainCube.splitString(line);
-  strList.forEach((type) => {
+  const typeList = plainCube.splitString(line);
+  typeList.forEach((type) => {
     if (type === "Q") {
       console.log("Bye~");
       rl.close();
