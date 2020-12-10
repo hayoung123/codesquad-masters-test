@@ -61,8 +61,6 @@ ex ) U : 맨 윗줄을 왼쪽으로 한칸 밀기
 
 # step-3 루빅스 큐브
 
-## class
-
 ## 해결방법
 
 step-2와 같은 방법으로 큐브가 움직인다.
@@ -85,17 +83,22 @@ ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
 
   plainCube: F가 실행될 때 함께 변경되는 인접한 면 (시계방향 순서대로 저장)
 
-  direction: 그 면에서 변경되는 방향을 저장해놨다.
+  direction: 각각의 면에서 변경되는 방향(줄)을 저장해놨다.
 
 위의 `MOVE_TYPE` 데이터를 이용해서 루빅스 큐브를 조작한다.
 
 1. `splitString()`: 입력받은 문자열을 설정해놓은 타입에 맞게 변경 시킨다.
+   - ( 대문자로 변경 &nbsp; /&nbsp; U3 -> U,U,U &nbsp; /&nbsp; [U, '] -> [U'])
 2. `moveCube()`: 입력받은 타입의 순서대로 큐브를 이동시킨다.
 
-   2-1. **'** 이 붙어있는지 확인해 **reverse**값을 정해준다.
+   2-1. **'(Quote)** 이 붙어있는지 확인해 **reverse**값을 정해준다.
+
    2-2. `rotateCube()`: 회전 시키는 면을 회전 시켜준다.
-   2-3. `makeNewArr()`: linked.plainCube의 linked.direction에 있는 배열을 새로운 배열(newArr)에 저장한다.
-   2-4. `moveIndex()`: newArr을 이동시킨다.
+
+   2-3. `makeNewArr()`: linked.plainCube의 linked.direction에 있는 배열(줄)을 새로운 배열(newArr)에 저장한다.
+
+   2-4. `moveIndex()`: newArr을 이동시킨다. (한칸 오른쪽 또는 왼쪽)
+
    2-5. `setCubeData()`: 이동시킨 newArr을 기존 cube에 저장해 업데이트한다.
 
 3. `printView()`: 전개도 모양으로 출력한다.
@@ -118,7 +121,7 @@ ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
 2. 큐브가 움직이는 였을 때 입력문자와 움직인 모형을 보여준다.
 3. 큐브가 원래 상태로 다 맞춰지거나 Q를 입력했을 때 종료된다.
 
-   - 정답을 맞췄으면 축하메세지를 출력한다.
+   - 정답을 맞췄으면 축하메세지를 추가로 출력한다.
 
 ## 출력결과
 
