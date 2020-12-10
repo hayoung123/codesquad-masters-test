@@ -77,7 +77,6 @@ let cube = [
 
 const plainCube = new PlainCube(cube);
 
-const { dir } = require("console");
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
