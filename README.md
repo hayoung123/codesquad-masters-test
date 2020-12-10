@@ -19,6 +19,10 @@
 3. `moveList()`: `moveOneIndex()`를 count만큼 실행해 움직여준다..
    - `moveOneIndex()` : 배열을 `pop()` -> `unshift()`로 한칸 미뤄준다.
 
+## 출력결과
+
+![step-1 결과](https://user-images.githubusercontent.com/67357426/101730035-a0455500-3afc-11eb-981b-bfd1962c6b0d.png)
+
 ---
 
 # step-2 평면 큐브
@@ -49,29 +53,19 @@ ex ) U : 맨 윗줄을 왼쪽으로 한칸 밀기
 3. `printCube()`: 큐브 출력
 4. 실행하며 Q가 입력되면 종료한다.
 
+## 출력결과
+
+![step-2 결과](https://user-images.githubusercontent.com/67357426/101730210-f87c5700-3afc-11eb-9b5f-d0de0621428d.png)
+
 ---
 
 # step-3 루빅스 큐브
 
 ## class
 
-3개의 클래스로 나누어서 진행
-
-### 1. RubiksCube
-
-큐브 회전을 다루는 클래스
-
-### 2. Timer
-
-타이머 클래스
-
-### 3. CubeGame
-
-랜덤 배열, 정답체크를 포함해 루빅스 큐브를 플레이 하는 클래스
-
 ## 해결방법
 
-step-2와 같은 방법으로 해결
+step-2와 같은 방법으로 큐브가 움직인다.
 
 ### class RubiksCube
 
@@ -106,4 +100,38 @@ ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
 
 3. `printView()`: 전개도 모양으로 출력한다.
 
+### class Timer
+
+- `new Date()`를 이용해 시간을 잰다.
+- 프로그램 시작할 때 start에 현재시간을 저장
+- 게임이 종료 될때의 시간을 구해서 start 시간과 차이로 경과시간을 구한다.
+
 ### class CubeGame
+
+`playCubeGame()`: 큐브게임의 흐름
+
+1. 입력 받는다.
+
+   - **mix**로 입력 받을 시 큐브가 무작위로 섞인다.
+   - 이동 명령을 받을 시 큐브가 이동명령에 따라 움직인다.
+
+2. 큐브가 움직이는 였을 때 입력문자와 움직인 모형을 보여준다.
+3. 큐브가 원래 상태로 다 맞춰지거나 Q를 입력했을 때 종료된다.
+
+   - 정답을 맞췄으면 축하메세지를 출력한다.
+
+## 출력결과
+
+### **일반 실행**
+
+![step-3 결과1](https://user-images.githubusercontent.com/67357426/101730341-31b4c700-3afd-11eb-9803-01aa3a10f89d.png)
+
+![step-3 결과2](https://user-images.githubusercontent.com/67357426/101730384-42fdd380-3afd-11eb-9b13-1370edca2c2a.png)
+
+### **정답화면**
+
+![step-3 정답](https://user-images.githubusercontent.com/67357426/101730444-5d37b180-3afd-11eb-8067-b638c28f28d4.png)
+
+### **무작위로 섞기**
+
+![step-3 섞기](https://user-images.githubusercontent.com/67357426/101730478-6cb6fa80-3afd-11eb-8c62-9eb18e492ed6.png)
