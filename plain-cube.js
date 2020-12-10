@@ -36,15 +36,18 @@ class PlainCube {
   }
   moveCube(cube, type) {
     type = this.MOVE_TYPE[type];
-    let newArr = [];
-    if (type.fixer === "column") {
-      cube.forEach((row) => newArr.push(row[type.fixIndex]));
-      newArr = this.moveIndex(newArr, type.reverse);
-    } else {
-      cube[type.fixIndex].forEach((v) => newArr.push(v));
-      newArr = this.moveIndex(newArr, type.reverse);
-    }
+    let newArr = this.makeNewArr(cube, type);
+    newArr = this.moveIndex(newArr, type.reverse);
     this.setCubeData(cube, newArr, type);
+  }
+  makeNewArr(cube, dir) {
+    let newArr = [];
+    if (dir.fixer === "row") {
+      cube[dir.fixIndex].forEach((code) => newArr.push(code));
+    } else {
+      cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
+    }
+    return newArr;
   }
   setCubeData(cube, newCube, dir) {
     if (dir.fixer === "row") {
@@ -74,6 +77,7 @@ let cube = [
 
 const plainCube = new PlainCube(cube);
 
+const { dir } = require("console");
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
