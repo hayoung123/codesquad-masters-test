@@ -173,10 +173,10 @@ class Timer {
     this.timer = new Date() - this.start;
     console.log(this.timer);
     let seconds = Math.floor(this.timer / 1000);
-    seconds = this.addZero(seconds);
     let minutes = Math.floor(seconds / 60);
-    minutes = this.addZero(minutes);
     seconds -= minutes * 60;
+    minutes = this.addZero(minutes);
+    seconds = this.addZero(seconds);
     console.log(`경과시간 : ${minutes}:${seconds}`);
   }
   addZero(num) {
