@@ -16,7 +16,7 @@
 
    - 방향이 L인경우는 나눈 값을 문자열 길이에서 빼주어서 R방향으로 가는 count만큼으로 바꾸어준다.
 
-3. `moveList()` : `moveOneIndex()`를 count만큼 실행해 움직여준다..
+3. `moveList()`: `moveOneIndex()`를 count만큼 실행해 움직여준다..
    - `moveOneIndex()` : 배열을 `pop()` -> `unshift()`로 한칸 미뤄준다.
 
 ---
@@ -25,26 +25,49 @@
 
 ### 해결방법
 
+평면 큐브를 2차원 배열로 만들어서 표현했다.
+
 U,U',R... 각각의 이동 방법의 특성을 데이터로 저장해놓는다.
 
-index가 커지는 쪽으로 옮겨지는 것들은 `reverse:false` 반대는`reverse:true` 로 해놨다.
+index가 커지는 쪽으로 옮겨지는 것들은 `reverse: false` 반대는`reverse: true` 로 해놨다.
 
 ex ) U : 맨 윗줄을 왼쪽으로 한칸 밀기
 
-- `fixer:row` : row가 고정된채로 이동
-- `fixIndex:0` : row가 고정되는 index가 0번
-- `reverse:true` : 인덱스가 작아지는 방향으로 이동
+- `fixer:row`: row가 고정된채로 이동
+- `fixIndex:0`: row가 고정되는 index가 0번
+- `reverse:true`: 인덱스가 작아지는 방향으로 이동
 
 위의 데이터를 이용해서 cube를 조작한다.
 
-1. `splitString()` : 입력받은 문자열을 각각의 타입에 맞게 변경 시킨다.
-2. `moveCube()` : 입력받은 타입의 순서대로 큐브를 이동시킨다.
+1. `splitString()`: 입력받은 문자열을 각각의 타입에 맞게 변경 시킨다.
+2. `moveCube()`: 입력받은 타입의 순서대로 큐브를 이동시킨다.
 
-   - `makeNewArr()` : 변경해야되는 부분만 새로운 배열로 만든다.
-   - `moveIndex()` : 새로만든 배열을 타입에 맞게 변경시킨다.(step-1에서 사용한 `moveOnedIndex()`와 `reverseOneIndex()`활용)
-   - `setCubeData()` : 원래 큐브에 변경되는 곳에 새로만든 배열의 데이터를 저장시킨다.
+   - `makeNewArr()`: 변경해야되는 부분만 새로운 배열로 만든다.
+   - `moveIndex()`: 새로만든 배열을 타입에 맞게 변경시킨다.(step-1에서 사용한 `moveOnedIndex()`와 `reverseOneIndex()`활용)
+   - `setCubeData()`: 원래 큐브에 변경되는 곳에 새로만든 배열의 데이터를 저장시킨다.
 
-3. `printCube()` : 큐브 출력
+3. `printCube()`: 큐브 출력
 4. 실행하며 Q가 입력되면 종료한다.
 
 ---
+
+# step-3 루빅스 큐브
+
+### 해결방법
+
+step-2와 같은 방법으로 해결
+
+`DIR_TYPE`: 큐브의 한면에서 윗줄,아래줄, 왼쪽줄, 오른쪽 줄을 저장
+
+ex) `DIR_TYPE.UP`: 큐브 한면의 맨 윗줄
+
+- `fixer: 'row'`: 맨 윗줄이기 때문에 row가 고정
+- `fixIndex: 0`: 0번 index의 row가 고정
+
+`MOVE_TYPE`: F,R,U,B,L,D 각각의 특성을 저장. (Quote가 붙은 것들은 반대방향이기 때문에 함수에서 처리)
+
+ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
+
+- `data: cube.front`: 90도로 돌아가는 면
+- `linked: [this.cube.up, this.cube.right, this.cube.down, this.cube.left]` : F가 실행될 때 함께 변경되는 인접한 면 (시계방향 순서대로 저장)
+- `linkedDir: [this.DIR_TYPE.DOWN, this.DIR_TYPE.LEFT, this.DIR_TYPE.UP, this.DIR_TYPE.RIGHT]`: 위의 linked에의 평면 큐브들의 변경되는 줄(linked면들과 )
