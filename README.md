@@ -21,3 +21,15 @@
 ---
 
 # step-2 평면 큐브
+
+### 해결방법
+
+U,U',R... 각각의 이동 방법의 특성을 데이터로 저장해놓는다.
+
+index가 커지는 쪽으로 옮겨지는 것들은 `reverse:false` 반대를 `reverse:true` 로 해놨다.
+
+ex) U : 맨 윗줄을 왼쪽으로 한칸 밀기
+
+- row가 고정된채로 이동 : `fixer:row`
+- row가 고정되는 index가 0번 : `fixIndex:0`
+- 인덱스가 작아지는 방향으로 이동 : `reverse:true`
