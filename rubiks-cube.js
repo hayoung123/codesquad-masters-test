@@ -43,18 +43,18 @@ class RubiksCube {
     this.count = 0;
   }
   splitString(str) {
-    let strList = str.split("").map((v) => v.toUpperCase());
+    let strList = str.split("").map((char) => char.toUpperCase());
     for (let i = 0; i < strList.length; i++) {
       if (strList[i] === "'") strList[i - 1] += "'";
     }
     strList = strList.filter((char) => char !== "'");
     const newStrList = [];
-    strList.forEach((v, idx) => {
-      if (!isNaN(parseInt(v))) {
-        const arr = new Array(v * 1 - 1).fill(strList[idx - 1]);
+    strList.forEach((char, idx) => {
+      if (!isNaN(parseInt(char))) {
+        const arr = new Array(char * 1 - 1).fill(strList[idx - 1]);
         newStrList.push(...arr);
       } else {
-        newStrList.push(v);
+        newStrList.push(char);
       }
     });
     return newStrList;
@@ -107,12 +107,12 @@ class RubiksCube {
   }
   setCubeData(cube, newCube, dir) {
     if (dir.fixer === "row") {
-      for (let i = 0; i < cube.length; i++) {
-        cube[dir.fixIndex][i] = newCube[i];
+      for (let column = 0; column < cube.length; column++) {
+        cube[dir.fixIndex][column] = newCube[column];
       }
     } else {
-      for (let i = 0; i < cube.length; i++) {
-        cube[i][dir.fixIndex] = newCube[i];
+      for (let row = 0; row < cube.length; row++) {
+        cube[row][dir.fixIndex] = newCube[row];
       }
     }
   }
@@ -141,19 +141,19 @@ class RubiksCube {
     return arr;
   }
   printCube(cube) {
-    cube.forEach((line) => {
-      const str = line.join(" ");
+    cube.forEach((row) => {
+      const str = row.join(" ");
       console.log("\t", str);
     });
     console.log();
   }
   printView() {
     this.printCube(this.cube.up);
-    for (let i = 0; i < 3; i++) {
-      const strLeft = this.cube.left[i].join(" ");
-      const strFront = this.cube.front[i].join(" ");
-      const strRight = this.cube.right[i].join(" ");
-      const strBack = this.cube.back[i].join(" ");
+    for (let row = 0; row < 3; row++) {
+      const strLeft = this.cube.left[row].join(" ");
+      const strFront = this.cube.front[row].join(" ");
+      const strRight = this.cube.right[row].join(" ");
+      const strBack = this.cube.back[row].join(" ");
       console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
     }
     console.log();
@@ -171,7 +171,6 @@ class Timer {
   }
   checkTime() {
     this.timer = new Date() - this.start;
-    console.log(this.timer);
     let seconds = Math.floor(this.timer / 1000);
     let minutes = Math.floor(seconds / 60);
     seconds -= minutes * 60;
