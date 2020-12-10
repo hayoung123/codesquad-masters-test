@@ -110,7 +110,7 @@ class RubiksCube {
     type = this.MOVE_TYPE[type];
     type.data = this.rotateCube(type.data, reverse);
     let newArr = [];
-    type.linked.forEach((cube, idx) => {
+    type.linked.forEach((cube) => {
       const linkedArr = this.makeNewArr(cube.plainCube, cube.direction);
       newArr.push(linkedArr);
     });
@@ -250,7 +250,8 @@ class CubeGame {
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
     if (stringCube === this.answer) {
-      console.log("정답입니다!");
+      console.log("ARE YOU GENIUS???");
+      console.log("정답입니다~~!!!");
       return true;
     }
   }
