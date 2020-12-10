@@ -1,6 +1,7 @@
 class RubiksCube {
   constructor({ cube }) {
     this.cube = cube;
+    this.initCube = JSON.parse(JSON.stringify(this.cube));
     this.DIR_TYPE = {
       UP: { fixer: "row", fixIndex: 0 },
       DOWN: { fixer: "row", fixIndex: 2 },
@@ -163,28 +164,8 @@ class RubiksCube {
     }
     return arr;
   }
-  printCube(cube) {
-    cube.forEach((row) => {
-      const str = row.join(" ");
-      console.log("\t", str);
-    });
-    console.log();
-  }
-  printView() {
-    this.printCube(this.cube.up);
-    for (let row = 0; row < 3; row++) {
-      const strLeft = this.cube.left[row].join(" ");
-      const strFront = this.cube.front[row].join(" ");
-      const strRight = this.cube.right[row].join(" ");
-      const strBack = this.cube.back[row].join(" ");
-      console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
-    }
-    console.log();
-    this.printCube(this.cube.down);
-  }
-  printEndComment() {
-    console.log(`조작갯수: ${this.count}`);
-    console.log("이용해주셔서 감사합니다. 뚜룻뚜룻뚜~");
+  resetCube() {
+    this.cube = JSON.parse(JSON.stringify(this.initCube));
   }
 }
 class Timer {
@@ -216,21 +197,6 @@ class CubeGame {
     this.moveType = rubiksCube.MOVE_TYPE;
     this.answer = JSON.stringify(this.cube);
   }
-  playCubeGame(input) {
-    if (input === "mix") {
-      this.randomCube();
-      this.rubiksCube.printView();
-    } else {
-      const typeList = rubiksCube.splitString(input);
-      typeList.forEach((type) => {
-        if (type === "Q") this.gameOver(rl);
-        console.log(type);
-        this.rubiksCube.moveCube(type);
-        this.rubiksCube.printView();
-        if (this.checkAnswer()) this.gameOver(rl);
-      });
-    }
-  }
   getRandomString() {
     let randomString = "";
     Object.keys(this.moveType).forEach((type) => {
@@ -254,17 +220,17 @@ class CubeGame {
       return true;
     }
   }
-  gameOver() {
-    this.timer.checkTime();
-    this.rubiksCube.printEndComment();
-  }
 }
 
 class CubeView {
-  constructor({ rubiksCube }) {
+  constructor({ rubiksCube, cubeGame }) {
     this.cube = rubiksCube.cube;
+    this.cubeGame = this.cubeGame;
     this.canvas = document.querySelector("#js-cube__canvas");
     this.context = this.canvas.getContext("2d");
+    this.moveBtn = document.querySelector(".btn__container");
+    this.cubeForm = document.querySelector(".cube-control__form");
+    this.cubeCommand = document.querySelector(".cube-commands");
     this.CUBE_TYPE = {
       up: { left: 150, top: 0, color: "blue" },
       down: { left: 150, top: 300, color: "red" },
@@ -273,21 +239,57 @@ class CubeView {
       right: { left: 300, top: 150, color: "green" },
       back: { left: 450, top: 150, color: "yellow" },
     };
+    this.colorType = {
+      B: "blue",
+      R: "red",
+      O: "orange",
+      G: "green",
+      W: "white",
+      Y: "yellow",
+    };
     this.cellSize = 50;
   }
+  init() {
+    this.moveBtn.addEventListener("click", this.handleClick.bind(this));
+    this.cubeForm.addEventListener("submit", this.handleSubmit.bind(this));
+    this.cubeCommand.addEventListener("click", this.handleCommand.bind(this));
+  }
+  handleClick({ target }) {
+    const type = target.innerHTML;
+    rubiksCube.moveCube(type);
+    this.renderCube();
+  }
+  handleSubmit({ target }) {
+    const input = target.input.value;
+    const typeList = rubiksCube.splitString(input);
+    typeList.forEach((type) => {
+      rubiksCube.moveCube(type);
+      this.renderCube();
+    });
+    target.input.value = "";
+  }
+  handleCommand({ target }) {
+    const targetName = target.innerHTML;
+    if (targetName === "shuffle") {
+      this.cubeGame.randomCube();
+      this.renderCube();
+    } else if (targetName === "Reset") {
+      rubiksCube.resetCube();
+      this.renderCube();
+    }
+  }
   renderCube() {
-    Object.keys(this.cube).forEach((type) => {
-      console.log(type);
-      this.renderBlock(this.cube[type], this.CUBE_TYPE[type]);
+    Object.keys(rubiksCube.cube).forEach((type) => {
+      this.renderBlock(rubiksCube.cube[type], this.CUBE_TYPE[type]);
     });
   }
   renderBlock(arr, cubeType) {
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr[i].length; j++) {
+    for (let row = 0; row < arr.length; row++) {
+      for (let column = 0; column < arr[row].length; column++) {
         this.renderBox(
-          cubeType.left + i * this.cellSize,
-          cubeType.top + j * this.cellSize,
-          cubeType.color
+          cubeType.left + column * this.cellSize,
+          cubeType.top + row * this.cellSize,
+          this.colorType[arr[row][column]]
         );
       }
     }
@@ -315,6 +317,7 @@ let cube = {
 const rubiksCube = new RubiksCube({ cube });
 const timer = new Timer();
 const cubeGame = new CubeGame({ rubiksCube, timer });
-const cubeView = new CubeView({ rubiksCube });
+const cubeView = new CubeView({ rubiksCube, cubeGame });
 
-cubeView.renderCube(cube.up, "red");
+cubeView.renderCube();
+cubeView.init();

@@ -14,7 +14,33 @@
       width="600"
       height="450"
     ></canvas>
-    <div class="cube__controller"></div>
+    <div class="cube-control__container">
+      <div class="btn__container">
+        <div class="control__btn">
+          <button>U</button>
+          <button>D</button>
+          <button>L</button>
+          <button>F</button>
+          <button>R</button>
+          <button>B</button>
+        </div>
+        <div class="control-reverse__btn">
+          <button>U'</button>
+          <button>D'</button>
+          <button>L'</button>
+          <button>F'</button>
+          <button>R'</button>
+          <button>B'</button>
+        </div>
+      </div>
+      <form class="cube-control__form" onsubmit="return false">
+        <input type="text" name="input" placeholder="큐브돌리기(R3L')" />
+      </form>
+      <div class="cube-commands">
+        <button>shuffle</button>
+        <button>Reset</button>
+      </div>
+    </div>
     <script src="cube.js"></script>
   </body>
 </html>
