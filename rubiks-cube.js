@@ -218,7 +218,7 @@ class CubeGame {
   }
   playCubeGame(input, rl) {
     if (input === "mix") {
-      this.randomCube();
+      this.shuffleCube();
       this.rubiksCube.printView();
     } else {
       const typeList = rubiksCube.splitString(input);
@@ -240,7 +240,7 @@ class CubeGame {
     });
     return randomString;
   }
-  randomCube() {
+  shuffleCube() {
     const randomString = this.getRandomString();
     const count = rubiksCube.count;
     const typeList = rubiksCube.splitString(randomString);
