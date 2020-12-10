@@ -7,37 +7,60 @@ class RubiksCube {
       LEFT: { fixer: "column", fixIndex: 0 },
       RIGHT: { fixer: "column", fixIndex: 2 },
     };
-    //prettier-ignore
     this.MOVE_TYPE = {
       F: {
         data: this.cube.front,
-        linked: [this.cube.up, this.cube.right, this.cube.down, this.cube.left],
-        linkedDir: [this.DIR_TYPE.DOWN, this.DIR_TYPE.LEFT, this.DIR_TYPE.UP, this.DIR_TYPE.RIGHT],
+        linked: [
+          { plainCube: this.cube.up, direction: this.DIR_TYPE.DOWN },
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.down, direction: this.DIR_TYPE.UP },
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.RIGHT },
+        ],
       },
       R: {
         data: this.cube.right,
-        linked: [this.cube.up, this.cube.back, this.cube.down, this.cube.front],
-        linkedDir: [this.DIR_TYPE.RIGHT,this.DIR_TYPE.LEFT,this.DIR_TYPE.RIGHT,this.DIR_TYPE.RIGHT,],
+        linked: [
+          { plainCube: this.cube.up, direction: this.DIR_TYPE.RIGHT },
+          { plainCube: this.cube.back, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.down, direction: this.DIR_TYPE.RIGHT },
+          { plainCube: this.cube.front, direction: this.DIR_TYPE.RIGHT },
+        ],
       },
       L: {
         data: this.cube.left,
-        linked: [this.cube.up, this.cube.front, this.cube.down, this.cube.back],
-        linkedDir: [this.DIR_TYPE.LEFT,this.DIR_TYPE.LEFT,this.DIR_TYPE.LEFT,this.DIR_TYPE.RIGHT,],
+        linked: [
+          { plainCube: this.cube.up, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.front, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.down, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.back, direction: this.DIR_TYPE.RIGHT },
+        ],
       },
       B: {
         data: this.cube.back,
-        linked: [this.cube.up, this.cube.left, this.cube.down, this.cube.right],
-        linkedDir: [this.DIR_TYPE.UP, this.DIR_TYPE.LEFT, this.DIR_TYPE.DOWN, this.DIR_TYPE.RIGHT],
+        linked: [
+          { plainCube: this.cube.up, direction: this.DIR_TYPE.UP },
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.LEFT },
+          { plainCube: this.cube.down, direction: this.DIR_TYPE.DOWN },
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.RIGHT },
+        ],
       },
       U: {
         data: this.cube.up,
-        linked: [this.cube.front, this.cube.left, this.cube.back, this.cube.right],
-        linkedDir: [this.DIR_TYPE.UP, this.DIR_TYPE.UP, this.DIR_TYPE.UP, this.DIR_TYPE.UP],
+        linked: [
+          { plainCube: this.cube.front, direction: this.DIR_TYPE.UP },
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.UP },
+          { plainCube: this.cube.back, direction: this.DIR_TYPE.UP },
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.UP },
+        ],
       },
       D: {
         data: this.cube.down,
-        linked: [this.cube.front, this.cube.right, this.cube.back, this.cube.left],
-        linkedDir: [this.DIR_TYPE.DOWN, this.DIR_TYPE.DOWN, this.DIR_TYPE.DOWN, this.DIR_TYPE.DOWN],
+        linked: [
+          { plainCube: this.cube.front, direction: this.DIR_TYPE.DOWN },
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.DOWN },
+          { plainCube: this.cube.back, direction: this.DIR_TYPE.DOWN },
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.DOWN },
+        ],
       },
     };
     this.count = 0;
@@ -88,12 +111,12 @@ class RubiksCube {
     type.data = this.rotateCube(type.data, reverse);
     let newArr = [];
     type.linked.forEach((cube, idx) => {
-      const linkedArr = this.makeNewArr(cube, type.linkedDir[idx]);
+      const linkedArr = this.makeNewArr(cube.plainCube, cube.direction);
       newArr.push(linkedArr);
     });
     newArr = this.moveIndex(newArr, reverse);
     type.linked.forEach((cube, idx) =>
-      this.setCubeData(cube, newArr[idx], type.linkedDir[idx])
+      this.setCubeData(cube.plainCube, newArr[idx], cube.direction)
     );
   }
   makeNewArr(cube, dir) {
