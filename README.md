@@ -29,7 +29,7 @@
 
 U,U',R... 각각의 이동 방법의 특성을 데이터로 저장해놓는다.
 
-index가 커지는 쪽으로 옮겨지는 것들은 `reverse: false` 반대는`reverse: true` 로 해놨다.
+index가 커지는 쪽으로 옮겨지는 것(L,U'..)들은 `reverse: false` 반대는`reverse: true` 로 해놨다.
 
 ex ) U : 맨 윗줄을 왼쪽으로 한칸 밀기
 
@@ -53,9 +53,27 @@ ex ) U : 맨 윗줄을 왼쪽으로 한칸 밀기
 
 # step-3 루빅스 큐브
 
-### 해결방법
+## class
+
+3개의 클래스로 나누어서 진행
+
+### 1. RubiksCube
+
+큐브 회전을 다루는 클래스
+
+### 2. Timer
+
+타이머 클래스
+
+### 3. CubeGame
+
+랜덤 배열, 정답체크를 포함해 루빅스 큐브를 플레이 하는 클래스
+
+## 해결방법
 
 step-2와 같은 방법으로 해결
+
+### class RubiksCube
 
 `DIR_TYPE`: 큐브의 한면에서 윗줄,아래줄, 왼쪽줄, 오른쪽 줄을 저장
 
@@ -69,5 +87,23 @@ ex) `DIR_TYPE.UP`: 큐브 한면의 맨 윗줄
 ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
 
 - `data: cube.front`: 90도로 돌아가는 면
-- `linked: [this.cube.up, this.cube.right, this.cube.down, this.cube.left]` : F가 실행될 때 함께 변경되는 인접한 면 (시계방향 순서대로 저장)
-- `linkedDir: [this.DIR_TYPE.DOWN, this.DIR_TYPE.LEFT, this.DIR_TYPE.UP, this.DIR_TYPE.RIGHT]`: 위의 linked에의 평면 큐브들의 변경되는 줄(linked면들과 )
+- `linked: [{ plainCube: this.cube.up, direction: this.DIR_TYPE.DOWN }, { plainCube: this.cube.right, direction: this.DIR_TYPE.LEFT } ...]` :
+
+  plainCube: F가 실행될 때 함께 변경되는 인접한 면 (시계방향 순서대로 저장)
+
+  direction: 그 면에서 변경되는 방향을 저장해놨다.
+
+위의 `MOVE_TYPE` 데이터를 이용해서 루빅스 큐브를 조작한다.
+
+1. `splitString()`: 입력받은 문자열을 설정해놓은 타입에 맞게 변경 시킨다.
+2. `moveCube()`: 입력받은 타입의 순서대로 큐브를 이동시킨다.
+
+   2-1. **'** 이 붙어있는지 확인해 **reverse**값을 정해준다.
+   2-2. `rotateCube()`: 회전 시키는 면을 회전 시켜준다.
+   2-3. `makeNewArr()`: linked.plainCube의 linked.direction에 있는 배열을 새로운 배열(newArr)에 저장한다.
+   2-4. `moveIndex()`: newArr을 이동시킨다.
+   2-5. `setCubeData()`: 이동시킨 newArr을 기존 cube에 저장해 업데이트한다.
+
+3. `printView()`: 전개도 모양으로 출력한다.
+
+### class CubeGame
