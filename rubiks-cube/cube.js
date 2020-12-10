@@ -167,7 +167,7 @@ class RubiksCube {
   resetCube() {
     for (let x in this.cube) {
       for (let row = 0; row < this.cube[x].length; row++) {
-        for (let col = 0; col < this.cube[x][i].length; col++) {
+        for (let col = 0; col < this.cube[x][row].length; col++) {
           this.cube[x][row][col] = this.initCube[x][row][col];
         }
       }
