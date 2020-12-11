@@ -218,26 +218,26 @@ class CubeGame {
   }
   playCubeGame(input, rl) {
     try {
-      if (input === 'mix') {
-        this.shuffleCube();
-        this.rubiksCube.printView();
-      } else {
-        this.commandCube(input);
-      }
+      this.commandCube(input);
     } catch (error) {
       console.log('제대로 된 값을 입력해주세요');
     }
     rl.prompt();
   }
   commandCube(input) {
-    const typeList = rubiksCube.splitString(input);
-    typeList.forEach((type) => {
-      if (type === 'Q') this.gameOver(rl);
-      console.log(type);
-      this.rubiksCube.moveCube(type);
+    if (input === 'mix') {
+      this.shuffleCube();
       this.rubiksCube.printView();
-      if (this.checkAnswer()) this.gameOver(rl);
-    });
+    } else {
+      const typeList = rubiksCube.splitString(input);
+      typeList.forEach((type) => {
+        if (type === 'Q') this.gameOver(rl);
+        console.log(type);
+        this.rubiksCube.moveCube(type);
+        this.rubiksCube.printView();
+        if (this.checkAnswer()) this.gameOver(rl);
+      });
+    }
   }
   getRandomString() {
     let randomString = '';
