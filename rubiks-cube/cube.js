@@ -243,12 +243,14 @@ class CubeView {
     this.renderCube();
   }
   handleSubmit({ target }) {
-    const input = target.input.value;
-    const typeList = rubiksCube.splitString(input);
-    typeList.forEach((type) => {
-      rubiksCube.moveCube(type);
-      this.renderCube();
-    });
+    try {
+      const input = target.input.value;
+      const typeList = rubiksCube.splitString(input);
+      typeList.forEach((type) => {
+        rubiksCube.moveCube(type);
+        this.renderCube();
+      });
+    } catch (error) {}
     target.input.value = '';
   }
   handleCommand({ target }) {
