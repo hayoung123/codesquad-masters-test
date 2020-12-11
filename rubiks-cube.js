@@ -194,17 +194,11 @@ class Timer {
   }
   checkTime() {
     this.timer = new Date() - this.start;
-    let seconds = Math.floor(this.timer / 1000);
-    let minutes = Math.floor(seconds / 60);
-    seconds -= minutes * 60;
-    minutes = this.addZero(minutes);
-    seconds = this.addZero(seconds);
+    let seconds = Math.floor((this.timer / 1000) % 60);
+    let minutes = Math.floor(this.timer / 1000 / 60);
+    seconds = seconds < 10 ? '0' + seconds : seconds + '';
+    minutes = minutes < 10 ? '0' + minutes : minutes + '';
     console.log(`경과시간 : ${minutes}:${seconds}`);
-  }
-  addZero(num) {
-    if (num === 0) return '00';
-    else if (num < 10) return `0${num}`;
-    else return num;
   }
 }
 
