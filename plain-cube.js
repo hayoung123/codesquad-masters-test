@@ -12,7 +12,25 @@ class PlainCube {
       "B'": { fixer: 'row', fixIndex: 2, reverse: true }
     };
   }
-  playPlainCube(input, rl) {}
+  playPlainCube(input, rl) {
+    try {
+      this.commandPlainCube(input, rl);
+    } catch (error) {
+      console.log('잘못된 값을 입력했어요!');
+    }
+  }
+  commandPlainCube(input, rl) {
+    const typeList = this.splitString(input);
+    typeList.forEach((type) => {
+      if (type === 'Q') {
+        console.log('Bye~');
+        rl.close();
+      }
+      console.log(type);
+      this.moveCube(this.cube, type);
+      this.printCube();
+    });
+  }
   moveOneIndex(arr) {
     const last = arr.pop();
     arr.unshift(last);
@@ -87,20 +105,7 @@ const rl = readline.createInterface({
 plainCube.printCube();
 rl.prompt();
 rl.on('line', function (line) {
-  try {
-    const typeList = plainCube.splitString(line);
-    typeList.forEach((type) => {
-      if (type === 'Q') {
-        console.log('Bye~');
-        rl.close();
-      }
-      console.log(type);
-      plainCube.moveCube(plainCube.cube, type);
-      plainCube.printCube();
-    });
-  } catch (error) {
-    console.log('잘못된 값을 입력했어요!');
-  }
+  plainCube.playPlainCube(line, rl);
   rl.prompt();
 }).on('close', function () {
   process.exit();
