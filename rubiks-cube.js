@@ -104,7 +104,6 @@ class RubiksCube {
     return char.replace("'", '');
   }
   moveCube(type) {
-    this.count++;
     const reverse = this.checkReverse(type);
     type = this.removeQuotes(type);
     type = this.MOVE_TYPE[type];
@@ -118,6 +117,7 @@ class RubiksCube {
     type.linked.forEach((cube, idx) =>
       this.setCubeData(cube.plainCube, newArr[idx], cube.direction)
     );
+    this.count++;
   }
   makeNewArr(cube, dir) {
     let newArr = [];
@@ -222,19 +222,21 @@ class CubeGame {
         this.shuffleCube();
         this.rubiksCube.printView();
       } else {
-        const typeList = rubiksCube.splitString(input);
-        typeList.forEach((type) => {
-          if (type === 'Q') this.gameOver(rl);
-          console.log(type);
-          this.rubiksCube.moveCube(type);
-          this.rubiksCube.printView();
-          if (this.checkAnswer()) this.gameOver(rl);
-        });
+        this.commandCube(input);
       }
     } catch (error) {
       console.log('제대로 된 값을 입력해주세요');
     }
     rl.prompt();
+  }
+  commandCube(input) {
+    const typeList = rubiksCube.splitString(input);
+    typeList.forEach((type) => {
+      if (type === 'Q' || this.checkAnswer()) this.gameOver(rl);
+      console.log(type);
+      this.rubiksCube.moveCube(type);
+      this.rubiksCube.printView();
+    });
   }
   getRandomString() {
     let randomString = '';
@@ -253,7 +255,7 @@ class CubeGame {
   }
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
-    if (stringCube === this.answer) {
+    if (stringCube === this.answer && rubiksCube.count !== 0) {
       console.log('ARE YOU GENIUS???');
       console.log('정답입니다~~!!!');
       return true;
