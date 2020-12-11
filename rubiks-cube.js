@@ -218,13 +218,13 @@ class CubeGame {
   }
   playCubeGame(input, rl) {
     try {
-      this.commandCube(input);
+      this.commandCube(input, rl);
     } catch (error) {
       console.log('제대로 된 값을 입력해주세요');
     }
     rl.prompt();
   }
-  commandCube(input) {
+  commandCube(input, rl) {
     if (input === 'mix') {
       this.shuffleCube();
       this.rubiksCube.printView();
