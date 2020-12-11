@@ -2,15 +2,34 @@ class PlainCube {
   constructor(cube) {
     this.cube = cube;
     this.MOVE_TYPE = {
-      U: { fixer: "row", fixIndex: 0, reverse: true },
-      "U'": { fixer: "row", fixIndex: 0, reverse: false },
-      R: { fixer: "column", fixIndex: 2, reverse: true },
-      "R'": { fixer: "column", fixIndex: 2, reverse: false },
-      L: { fixer: "column", fixIndex: 0, reverse: false },
-      "L'": { fixer: "column", fixIndex: 0, reverse: true },
-      B: { fixer: "row", fixIndex: 2, reverse: false },
-      "B'": { fixer: "row", fixIndex: 2, reverse: true },
+      U: { fixer: 'row', fixIndex: 0, reverse: true },
+      "U'": { fixer: 'row', fixIndex: 0, reverse: false },
+      R: { fixer: 'column', fixIndex: 2, reverse: true },
+      "R'": { fixer: 'column', fixIndex: 2, reverse: false },
+      L: { fixer: 'column', fixIndex: 0, reverse: false },
+      "L'": { fixer: 'column', fixIndex: 0, reverse: true },
+      B: { fixer: 'row', fixIndex: 2, reverse: false },
+      "B'": { fixer: 'row', fixIndex: 2, reverse: true }
     };
+  }
+  playPlainCube(input, rl) {
+    try {
+      this.commandPlainCube(input, rl);
+    } catch (error) {
+      console.log('잘못된 값을 입력했어요!');
+    }
+  }
+  commandPlainCube(input, rl) {
+    const typeList = this.splitString(input);
+    typeList.forEach((type) => {
+      if (type === 'Q') {
+        console.log('Bye~');
+        rl.close();
+      }
+      console.log(type);
+      this.moveCube(this.cube, type);
+      this.printCube();
+    });
   }
   moveOneIndex(arr) {
     const last = arr.pop();
@@ -27,7 +46,7 @@ class PlainCube {
     else return this.moveOneIndex(arr);
   }
   splitString(str) {
-    let strList = str.split("").map((v) => v.toUpperCase());
+    let strList = str.split('').map((v) => v.toUpperCase());
     for (let i = 0; i < strList.length; i++) {
       if (strList[i] === "'") strList[i - 1] += "'";
     }
@@ -42,7 +61,7 @@ class PlainCube {
   }
   makeNewArr(cube, dir) {
     let newArr = [];
-    if (dir.fixer === "row") {
+    if (dir.fixer === 'row') {
       cube[dir.fixIndex].forEach((code) => newArr.push(code));
     } else {
       cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
@@ -50,7 +69,7 @@ class PlainCube {
     return newArr;
   }
   setCubeData(cube, newCube, dir) {
-    if (dir.fixer === "row") {
+    if (dir.fixer === 'row') {
       for (let i = 0; i < cube.length; i++) {
         cube[dir.fixIndex][i] = newCube[i];
       }
@@ -62,7 +81,7 @@ class PlainCube {
   }
   printCube() {
     this.cube.forEach((line) => {
-      const str = line.join(" ");
+      const str = line.join(' ');
       console.log(str);
     });
     console.log();
@@ -70,33 +89,24 @@ class PlainCube {
 }
 
 let cube = [
-  ["R", "R", "W"],
-  ["G", "C", "W"],
-  ["G", "B", "B"],
+  ['R', 'R', 'W'],
+  ['G', 'C', 'W'],
+  ['G', 'B', 'B']
 ];
 
 const plainCube = new PlainCube(cube);
 
-const readline = require("readline");
+const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: "CUBE> ",
+  prompt: 'CUBE> '
 });
 plainCube.printCube();
 rl.prompt();
-rl.on("line", function (line) {
-  const typeList = plainCube.splitString(line);
-  typeList.forEach((type) => {
-    if (type === "Q") {
-      console.log("Bye~");
-      rl.close();
-    }
-    console.log(type);
-    plainCube.moveCube(plainCube.cube, type);
-    plainCube.printCube();
-  });
+rl.on('line', function (line) {
+  plainCube.playPlainCube(line, rl);
   rl.prompt();
-}).on("close", function () {
+}).on('close', function () {
   process.exit();
 });
