@@ -2,10 +2,10 @@ class RubiksCube {
   constructor({ cube }) {
     this.cube = cube;
     this.DIR_TYPE = {
-      UP: { fixer: "row", fixIndex: 0 },
-      DOWN: { fixer: "row", fixIndex: 2 },
-      LEFT: { fixer: "column", fixIndex: 0 },
-      RIGHT: { fixer: "column", fixIndex: 2 },
+      UP: { fixer: 'row', fixIndex: 0 },
+      DOWN: { fixer: 'row', fixIndex: 2 },
+      LEFT: { fixer: 'column', fixIndex: 0 },
+      RIGHT: { fixer: 'column', fixIndex: 2 }
     };
     this.MOVE_TYPE = {
       F: {
@@ -14,8 +14,8 @@ class RubiksCube {
           { plainCube: this.cube.up, direction: this.DIR_TYPE.DOWN },
           { plainCube: this.cube.right, direction: this.DIR_TYPE.LEFT },
           { plainCube: this.cube.down, direction: this.DIR_TYPE.UP },
-          { plainCube: this.cube.left, direction: this.DIR_TYPE.RIGHT },
-        ],
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.RIGHT }
+        ]
       },
       R: {
         data: this.cube.right,
@@ -23,8 +23,8 @@ class RubiksCube {
           { plainCube: this.cube.up, direction: this.DIR_TYPE.RIGHT },
           { plainCube: this.cube.back, direction: this.DIR_TYPE.LEFT },
           { plainCube: this.cube.down, direction: this.DIR_TYPE.RIGHT },
-          { plainCube: this.cube.front, direction: this.DIR_TYPE.RIGHT },
-        ],
+          { plainCube: this.cube.front, direction: this.DIR_TYPE.RIGHT }
+        ]
       },
       L: {
         data: this.cube.left,
@@ -32,8 +32,8 @@ class RubiksCube {
           { plainCube: this.cube.up, direction: this.DIR_TYPE.LEFT },
           { plainCube: this.cube.front, direction: this.DIR_TYPE.LEFT },
           { plainCube: this.cube.down, direction: this.DIR_TYPE.LEFT },
-          { plainCube: this.cube.back, direction: this.DIR_TYPE.RIGHT },
-        ],
+          { plainCube: this.cube.back, direction: this.DIR_TYPE.RIGHT }
+        ]
       },
       B: {
         data: this.cube.back,
@@ -41,8 +41,8 @@ class RubiksCube {
           { plainCube: this.cube.up, direction: this.DIR_TYPE.UP },
           { plainCube: this.cube.left, direction: this.DIR_TYPE.LEFT },
           { plainCube: this.cube.down, direction: this.DIR_TYPE.DOWN },
-          { plainCube: this.cube.right, direction: this.DIR_TYPE.RIGHT },
-        ],
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.RIGHT }
+        ]
       },
       U: {
         data: this.cube.up,
@@ -50,8 +50,8 @@ class RubiksCube {
           { plainCube: this.cube.front, direction: this.DIR_TYPE.UP },
           { plainCube: this.cube.left, direction: this.DIR_TYPE.UP },
           { plainCube: this.cube.back, direction: this.DIR_TYPE.UP },
-          { plainCube: this.cube.right, direction: this.DIR_TYPE.UP },
-        ],
+          { plainCube: this.cube.right, direction: this.DIR_TYPE.UP }
+        ]
       },
       D: {
         data: this.cube.down,
@@ -59,14 +59,14 @@ class RubiksCube {
           { plainCube: this.cube.front, direction: this.DIR_TYPE.DOWN },
           { plainCube: this.cube.right, direction: this.DIR_TYPE.DOWN },
           { plainCube: this.cube.back, direction: this.DIR_TYPE.DOWN },
-          { plainCube: this.cube.left, direction: this.DIR_TYPE.DOWN },
-        ],
-      },
+          { plainCube: this.cube.left, direction: this.DIR_TYPE.DOWN }
+        ]
+      }
     };
     this.count = 0;
   }
   splitString(str) {
-    let strList = str.split("").map((char) => char.toUpperCase());
+    let strList = str.split('').map((char) => char.toUpperCase());
     for (let i = 0; i < strList.length; i++) {
       if (strList[i] === "'") strList[i - 1] += "'";
     }
@@ -97,14 +97,13 @@ class RubiksCube {
     else return this.moveOneIndex(arr);
   }
   checkReverse(char) {
-    if (char.split("").includes("'")) return true;
+    if (char.split('').includes("'")) return true;
     return false;
   }
   removeQuotes(char) {
-    return char.replace("'", "");
+    return char.replace("'", '');
   }
   moveCube(type) {
-    this.count++;
     const reverse = this.checkReverse(type);
     type = this.removeQuotes(type);
     type = this.MOVE_TYPE[type];
@@ -118,10 +117,11 @@ class RubiksCube {
     type.linked.forEach((cube, idx) =>
       this.setCubeData(cube.plainCube, newArr[idx], cube.direction)
     );
+    this.count++;
   }
   makeNewArr(cube, dir) {
     let newArr = [];
-    if (dir.fixer === "row") {
+    if (dir.fixer === 'row') {
       cube[dir.fixIndex].forEach((code) => newArr.push(code));
     } else {
       cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
@@ -129,7 +129,7 @@ class RubiksCube {
     return newArr;
   }
   setCubeData(cube, newCube, dir) {
-    if (dir.fixer === "row") {
+    if (dir.fixer === 'row') {
       for (let column = 0; column < cube.length; column++) {
         cube[dir.fixIndex][column] = newCube[column];
       }
@@ -165,18 +165,18 @@ class RubiksCube {
   }
   printCube(cube) {
     cube.forEach((row) => {
-      const str = row.join(" ");
-      console.log("\t", str);
+      const str = row.join(' ');
+      console.log('\t', str);
     });
     console.log();
   }
   printView() {
     this.printCube(this.cube.up);
     for (let row = 0; row < 3; row++) {
-      const strLeft = this.cube.left[row].join(" ");
-      const strFront = this.cube.front[row].join(" ");
-      const strRight = this.cube.right[row].join(" ");
-      const strBack = this.cube.back[row].join(" ");
+      const strLeft = this.cube.left[row].join(' ');
+      const strFront = this.cube.front[row].join(' ');
+      const strRight = this.cube.right[row].join(' ');
+      const strBack = this.cube.back[row].join(' ');
       console.log(`${strLeft}\t${strFront}\t${strRight}\t${strBack}`);
     }
     console.log();
@@ -184,7 +184,7 @@ class RubiksCube {
   }
   printEndComment() {
     console.log(`조작갯수: ${this.count}`);
-    console.log("이용해주셔서 감사합니다. 뚜룻뚜룻뚜~");
+    console.log('이용해주셔서 감사합니다. 뚜룻뚜룻뚜~');
   }
 }
 class Timer {
@@ -202,7 +202,7 @@ class Timer {
     console.log(`경과시간 : ${minutes}:${seconds}`);
   }
   addZero(num) {
-    if (num === 0) return "00";
+    if (num === 0) return '00';
     else if (num < 10) return `0${num}`;
     else return num;
   }
@@ -217,23 +217,29 @@ class CubeGame {
     this.answer = JSON.stringify(this.cube);
   }
   playCubeGame(input, rl) {
-    if (input === "mix") {
-      this.shuffleCube();
-      this.rubiksCube.printView();
-    } else {
-      const typeList = rubiksCube.splitString(input);
-      typeList.forEach((type) => {
-        if (type === "Q") this.gameOver(rl);
-        console.log(type);
-        this.rubiksCube.moveCube(type);
+    try {
+      if (input === 'mix') {
+        this.shuffleCube();
         this.rubiksCube.printView();
-        if (this.checkAnswer()) this.gameOver(rl);
-      });
+      } else {
+        this.commandCube(input);
+      }
+    } catch (error) {
+      console.log('제대로 된 값을 입력해주세요');
     }
     rl.prompt();
   }
+  commandCube(input) {
+    const typeList = rubiksCube.splitString(input);
+    typeList.forEach((type) => {
+      if (type === 'Q' || this.checkAnswer()) this.gameOver(rl);
+      console.log(type);
+      this.rubiksCube.moveCube(type);
+      this.rubiksCube.printView();
+    });
+  }
   getRandomString() {
-    let randomString = "";
+    let randomString = '';
     Object.keys(this.moveType).forEach((type) => {
       randomString += type;
       randomString += Math.ceil(Math.random() * 4);
@@ -249,9 +255,9 @@ class CubeGame {
   }
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
-    if (stringCube === this.answer) {
-      console.log("ARE YOU GENIUS???");
-      console.log("정답입니다~~!!!");
+    if (stringCube === this.answer && rubiksCube.count !== 0) {
+      console.log('ARE YOU GENIUS???');
+      console.log('정답입니다~~!!!');
       return true;
     }
   }
@@ -263,29 +269,29 @@ class CubeGame {
 }
 
 let cube = {
-  up: Array.from(Array(3), () => new Array(3).fill("B")),
-  down: Array.from(Array(3), () => new Array(3).fill("R")),
-  front: Array.from(Array(3), () => new Array(3).fill("O")),
-  right: Array.from(Array(3), () => new Array(3).fill("G")),
-  left: Array.from(Array(3), () => new Array(3).fill("W")),
-  back: Array.from(Array(3), () => new Array(3).fill("Y")),
+  up: Array.from(Array(3), () => new Array(3).fill('B')),
+  down: Array.from(Array(3), () => new Array(3).fill('R')),
+  front: Array.from(Array(3), () => new Array(3).fill('O')),
+  right: Array.from(Array(3), () => new Array(3).fill('G')),
+  left: Array.from(Array(3), () => new Array(3).fill('W')),
+  back: Array.from(Array(3), () => new Array(3).fill('Y'))
 };
 
 const rubiksCube = new RubiksCube({ cube });
 const timer = new Timer();
 const cubeGame = new CubeGame({ rubiksCube, timer });
 
-const readline = require("readline");
+const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: "CUBE> ",
+  prompt: 'CUBE> '
 });
 console.log('섞고 싶으면 "mix"를 입력해주세요');
 rubiksCube.printView();
 rl.prompt();
-rl.on("line", function (line) {
+rl.on('line', function (line) {
   cubeGame.playCubeGame(line, rl);
-}).on("close", function () {
+}).on('close', function () {
   process.exit();
 });
