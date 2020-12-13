@@ -12,6 +12,7 @@ class PlainCube {
       "B'": { fixer: 'row', fixIndex: 2, reverse: true }
     };
   }
+  //게임스타트!
   playPlainCube(input, rl) {
     try {
       this.commandPlainCube(input, rl);
@@ -19,6 +20,7 @@ class PlainCube {
       console.log('잘못된 값을 입력했어요!');
     }
   }
+  //입력값에 따라서 큐브를 처리
   commandPlainCube(input, rl) {
     const typeList = this.splitString(input);
     typeList.forEach((type) => {
@@ -31,6 +33,27 @@ class PlainCube {
       this.printCube();
     });
   }
+  //입력 문자열 tokenize
+  splitString(str) {
+    let strList = str.split('').map((v) => v.toUpperCase());
+    for (let i = 0; i < strList.length; i++) {
+      if (strList[i] === "'") strList[i - 1] += "'";
+    }
+    strList = strList.filter((char) => char !== "'");
+    return strList;
+  }
+  //입력에 따라 큐브를 변경
+  moveCube(cube, type) {
+    type = this.MOVE_TYPE[type];
+    let newArr = this.makeNewArr(cube, type);
+    newArr = this.moveIndex(newArr, type.reverse);
+    this.setCubeData(cube, newArr, type);
+  }
+  // type(reverse)에 따라 배열을 이동
+  moveIndex(arr, reverse) {
+    if (reverse) return this.reverseOneIndex(arr);
+    else return this.moveOneIndex(arr);
+  }
   moveOneIndex(arr) {
     const last = arr.pop();
     arr.unshift(last);
@@ -41,24 +64,7 @@ class PlainCube {
     arr.push(first);
     return arr;
   }
-  moveIndex(arr, reverse) {
-    if (reverse) return this.reverseOneIndex(arr);
-    else return this.moveOneIndex(arr);
-  }
-  splitString(str) {
-    let strList = str.split('').map((v) => v.toUpperCase());
-    for (let i = 0; i < strList.length; i++) {
-      if (strList[i] === "'") strList[i - 1] += "'";
-    }
-    strList = strList.filter((char) => char !== "'");
-    return strList;
-  }
-  moveCube(cube, type) {
-    type = this.MOVE_TYPE[type];
-    let newArr = this.makeNewArr(cube, type);
-    newArr = this.moveIndex(newArr, type.reverse);
-    this.setCubeData(cube, newArr, type);
-  }
+  //type(dir)에 맞는 배열 만들기
   makeNewArr(cube, dir) {
     let newArr = [];
     if (dir.fixer === 'row') {
@@ -68,6 +74,7 @@ class PlainCube {
     }
     return newArr;
   }
+  //기존 큐브에 업데이트된 배열 값을 저장
   setCubeData(cube, newCube, dir) {
     if (dir.fixer === 'row') {
       for (let i = 0; i < cube.length; i++) {
