@@ -95,15 +95,17 @@ ex ) `MOVE_TYPE[F]`: 앞면을 시계방향으로 돌리기
    - ( 대문자로 변경 &nbsp; /&nbsp; U3 -> U,U,U &nbsp; /&nbsp; [U, '] -> [U'])
 2. `moveCube()`: 입력받은 타입의 순서대로 큐브를 이동시킨다.
 
-   2-1. **'(Quote)** 이 붙어있는지 확인해 **reverse**값을 정해준다.
+   2-1. `checkReverse()`: Quote이 붙어있는지 확인해 **reverse**값을 정해준다.
 
-   2-2. `rotateCube()`: 회전 시키는 면을 회전 시켜준다.
+   2-2. `removeQuotes()`: MOVE_TYPE에 맞게 type의 Qutoe 제거
 
-   2-3. `makeNewArr()`: linked.plainCube의 linked.direction에 있는 배열(줄)을 새로운 배열(newArr)에 저장한다.
+   2-3. `rotateCube()`: 회전 시키는 면을 회전 시켜준다.
 
-   2-4. `moveIndex()`: newArr을 이동시킨다. (한칸 오른쪽 또는 왼쪽)
+   2-4. `makeLinkedArr()`: type의 linked에 있는 각각의 linked.plainCube-linked.direction에 맞는 배열을 새로운 배열(newLinkedArr)에 저장한다.
 
-   2-5. `setCubeData()`: 이동시킨 newArr을 기존 cube에 저장해 업데이트한다.
+   2-5. `moveIndex()`: newLinkedArr을 이동시킨다. (한칸 오른쪽 또는 왼쪽 (reverse or !reverse))
+
+   2-6. `setLinkedData()`: 이동시킨 newLinkedArr을 기존 cube에 저장해 업데이트한다.
 
 3. `printView()`: 전개도 모양으로 출력한다.
 
