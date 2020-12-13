@@ -65,6 +65,7 @@ class RubiksCube {
     };
     this.count = 0;
   }
+  //입력 문자열 tokenize
   splitString(str) {
     let strList = str.split('').map((char) => char.toUpperCase());
     for (let i = 0; i < strList.length; i++) {
@@ -81,6 +82,17 @@ class RubiksCube {
       }
     });
     return newStrList;
+  }
+  //입력에 따라 큐브를 변경
+  moveCube(type) {
+    const reverse = this.checkReverse(type);
+    type = this.removeQuotes(type);
+    type = this.MOVE_TYPE[type];
+    type.data = this.rotateCube(type.data, reverse);
+    let newLinkedArr = this.makeLinkedArr(type);
+    newLinkedArr = this.moveIndex(newLinkedArr, reverse);
+    this.setLinkedData(type, newLinkedArr);
+    this.count++;
   }
   // type에 따라 배열을 이동
   moveIndex(arr, reverse) {
@@ -104,16 +116,6 @@ class RubiksCube {
   }
   removeQuotes(char) {
     return char.replace("'", '');
-  }
-  moveCube(type) {
-    const reverse = this.checkReverse(type);
-    type = this.removeQuotes(type);
-    type = this.MOVE_TYPE[type];
-    type.data = this.rotateCube(type.data, reverse);
-    let newLinkedArr = this.makeLinkedArr(type);
-    newLinkedArr = this.moveIndex(newLinkedArr, reverse);
-    this.setLinkedData(type, newLinkedArr);
-    this.count++;
   }
   //type에 맞는 linked된 큐브 배열 만들기
   makeLinkedArr(type) {
@@ -224,6 +226,7 @@ class CubeGame {
     this.moveType = rubiksCube.MOVE_TYPE;
     this.answer = JSON.stringify(this.cube);
   }
+  //게임스타트!
   playCubeGame(input, rl) {
     try {
       this.commandCube(input, rl);
@@ -232,6 +235,7 @@ class CubeGame {
     }
     rl.prompt();
   }
+  //입력값에 따라서 큐브를 처리
   commandCube(input, rl) {
     if (input === 'mix') {
       this.shuffleCube();
@@ -255,6 +259,7 @@ class CubeGame {
     });
     return randomString;
   }
+  //큐브 무작위 섞기
   shuffleCube() {
     const randomString = this.getRandomString();
     const count = rubiksCube.count;
@@ -262,6 +267,7 @@ class CubeGame {
     typeList.forEach((type) => rubiksCube.moveCube(type));
     rubiksCube.count = count;
   }
+  //정답체크
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
     if (stringCube === this.answer) {
