@@ -65,6 +65,7 @@ class RubiksCube {
     };
     this.count = 0;
   }
+  //입력 문자열 tokenize
   splitString(str) {
     let strList = str.split('').map((char) => char.toUpperCase());
     for (let i = 0; i < strList.length; i++) {
@@ -82,6 +83,22 @@ class RubiksCube {
     });
     return newStrList;
   }
+  //입력에 따라 큐브를 변경
+  moveCube(type) {
+    const reverse = this.checkReverse(type);
+    type = this.removeQuotes(type);
+    type = this.MOVE_TYPE[type];
+    type.data = this.rotateCube(type.data, reverse);
+    let newLinkedArr = this.makeLinkedArr(type);
+    newLinkedArr = this.moveIndex(newLinkedArr, reverse);
+    this.setLinkedData(type, newLinkedArr);
+    this.count++;
+  }
+  // type에 따라 배열을 이동
+  moveIndex(arr, reverse) {
+    if (reverse) return this.reverseOneIndex(arr);
+    else return this.moveOneIndex(arr);
+  }
   moveOneIndex(arr) {
     const last = arr.pop();
     arr.unshift(last);
@@ -92,10 +109,7 @@ class RubiksCube {
     arr.push(first);
     return arr;
   }
-  moveIndex(arr, reverse) {
-    if (reverse) return this.reverseOneIndex(arr);
-    else return this.moveOneIndex(arr);
-  }
+  // Quote를 체크해 reverse 판별
   checkReverse(char) {
     if (char.split('').includes("'")) return true;
     return false;
@@ -103,21 +117,14 @@ class RubiksCube {
   removeQuotes(char) {
     return char.replace("'", '');
   }
-  moveCube(type) {
-    const reverse = this.checkReverse(type);
-    type = this.removeQuotes(type);
-    type = this.MOVE_TYPE[type];
-    type.data = this.rotateCube(type.data, reverse);
+  //type에 맞는 linked된 큐브 배열 만들기
+  makeLinkedArr(type) {
     let newArr = [];
     type.linked.forEach((cube) => {
       const linkedArr = this.makeNewArr(cube.plainCube, cube.direction);
       newArr.push(linkedArr);
     });
-    newArr = this.moveIndex(newArr, reverse);
-    type.linked.forEach((cube, idx) =>
-      this.setCubeData(cube.plainCube, newArr[idx], cube.direction)
-    );
-    this.count++;
+    return newArr;
   }
   makeNewArr(cube, dir) {
     let newArr = [];
@@ -127,6 +134,12 @@ class RubiksCube {
       cube.forEach((cube) => newArr.push(cube[dir.fixIndex]));
     }
     return newArr;
+  }
+  //기존 큐브에 업데이트된 linked 배열 값을 저장
+  setLinkedData(type, newLinkedArr) {
+    type.linked.forEach((cube, idx) =>
+      this.setCubeData(cube.plainCube, newLinkedArr[idx], cube.direction)
+    );
   }
   setCubeData(cube, newCube, dir) {
     if (dir.fixer === 'row') {
@@ -139,6 +152,7 @@ class RubiksCube {
       }
     }
   }
+  //type에 따라서 90,-90도로 회전
   rotateCube(cube, reverse) {
     if (reverse) return this.reverseRotate(cube);
     else return this.rotate(cube);
@@ -163,6 +177,7 @@ class RubiksCube {
     }
     return arr;
   }
+  //평면 큐브로 출력
   printCube(cube) {
     cube.forEach((row) => {
       const str = row.join(' ');
@@ -170,6 +185,7 @@ class RubiksCube {
     });
     console.log();
   }
+  //전개도로 출력
   printView() {
     this.printCube(this.cube.up);
     for (let row = 0; row < 3; row++) {
@@ -210,6 +226,7 @@ class CubeGame {
     this.moveType = rubiksCube.MOVE_TYPE;
     this.answer = JSON.stringify(this.cube);
   }
+  //게임스타트!
   playCubeGame(input, rl) {
     try {
       this.commandCube(input, rl);
@@ -218,6 +235,7 @@ class CubeGame {
     }
     rl.prompt();
   }
+  //입력값에 따라서 큐브를 처리
   commandCube(input, rl) {
     if (input === 'mix') {
       this.shuffleCube();
@@ -241,6 +259,7 @@ class CubeGame {
     });
     return randomString;
   }
+  //큐브 무작위 섞기
   shuffleCube() {
     const randomString = this.getRandomString();
     const count = rubiksCube.count;
@@ -248,6 +267,7 @@ class CubeGame {
     typeList.forEach((type) => rubiksCube.moveCube(type));
     rubiksCube.count = count;
   }
+  //정답체크
   checkAnswer() {
     const stringCube = JSON.stringify(this.cube);
     if (stringCube === this.answer) {
